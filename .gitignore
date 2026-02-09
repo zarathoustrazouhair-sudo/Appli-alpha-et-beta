@@ -3,3 +3,7 @@ build/
 .dart_tool/
 *.apk
 *.zip
+
+# Python
+__pycache__/
+*.pyc
