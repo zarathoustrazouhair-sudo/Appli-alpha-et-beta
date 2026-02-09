@@ -1,0 +1,5 @@
+final_migration_fix.py
+build/
+.dart_tool/
+*.apk
+*.zip
