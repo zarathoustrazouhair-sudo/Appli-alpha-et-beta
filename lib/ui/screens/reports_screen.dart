@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:printing/printing.dart';
 
 import '../../services/pdf_generator/pdf_service.dart';
 
@@ -22,38 +21,114 @@ class ReportsScreen extends ConsumerWidget {
             title: 'État Global des Cotisations',
             subtitle: 'Liste de tous les appartements avec leurs soldes',
             icon: Icons.table_chart,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => PdfViewerScreen(
-                    title: 'État des Cotisations',
-                    buildPdf: (format) => ref.read(pdfServiceProvider).generateGlobalStatusPdf(),
-                  ),
-                ),
-              );
-            },
+            onTap: () => _handlePdfAction(
+              context,
+              ref,
+              'Etat_Cotisations.pdf',
+              () => ref.read(pdfServiceProvider).generateGlobalStatusPdf(),
+            ),
           ),
           const SizedBox(height: 16),
           _ReportCard(
             title: 'Bilan Financier',
             subtitle: 'Recettes vs Dépenses par catégorie',
             icon: Icons.pie_chart,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => PdfViewerScreen(
-                    title: 'Bilan Financier',
-                    buildPdf: (format) => ref.read(pdfServiceProvider).generateBilanPdf(),
-                  ),
-                ),
-              );
-            },
+            onTap: () => _handlePdfAction(
+              context,
+              ref,
+              'Bilan_Financier.pdf',
+              () => ref.read(pdfServiceProvider).generateBilanPdf(),
+            ),
           ),
         ],
       ),
     );
+  }
+
+  Future<void> _handlePdfAction(
+    BuildContext context,
+    WidgetRef ref,
+    String fileName,
+    Future<Uint8List> Function() generatePdf,
+  ) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(child: CircularProgressIndicator()),
+    );
+
+    try {
+      final bytes = await generatePdf();
+      if (context.mounted) Navigator.pop(context); // Close loading
+
+      if (context.mounted) {
+        showModalBottomSheet(
+          context: context,
+          builder: (context) => Container(
+            padding: const EdgeInsets.all(24),
+            height: 200,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text('Document généré : $fileName',
+                    style: const TextStyle(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+                const SizedBox(height: 24),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        icon: const Icon(Icons.save),
+                        label: const Text('ENREGISTRER'),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green, foregroundColor: Colors.white),
+                        onPressed: () async {
+                          try {
+                            await ref.read(pdfServiceProvider).savePdfToRootFolder(fileName, bytes);
+                            if (context.mounted) {
+                              Navigator.pop(context);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Fichier sauvegardé avec succès')),
+                              );
+                            }
+                          } catch (e) {
+                            if (context.mounted) {
+                              Navigator.pop(context);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Erreur: $e'), backgroundColor: Colors.red),
+                              );
+                            }
+                          }
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        icon: const Icon(Icons.print),
+                        label: const Text('IMPRIMER'),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue, foregroundColor: Colors.white),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          ref.read(pdfServiceProvider).printOrSharePdf(fileName, bytes);
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) Navigator.pop(context); // Close loading
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erreur génération: $e'), backgroundColor: Colors.red),
+        );
+      }
+    }
   }
 }
 
@@ -82,29 +157,6 @@ class _ReportCard extends StatelessWidget {
         subtitle: Text(subtitle),
         trailing: const Icon(Icons.chevron_right),
         onTap: onTap,
-      ),
-    );
-  }
-}
-
-class PdfViewerScreen extends StatelessWidget {
-  final String title;
-  final Future<Uint8List> Function(dynamic format) buildPdf;
-
-  const PdfViewerScreen({
-    super.key,
-    required this.title,
-    required this.buildPdf,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(title)),
-      body: PdfPreview(
-        build: buildPdf,
-        canChangeOrientation: false,
-        canDebug: false,
       ),
     );
   }

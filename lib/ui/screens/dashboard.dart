@@ -158,7 +158,6 @@ class ApartmentList extends ConsumerWidget {
             return ApartmentCard(
               apartment: apt,
               onTap: () {
-                // TODO: Open Apartment Details (Transactions)
                 _showTransactionDialog(context, ref, apt);
               },
             );
@@ -175,18 +174,22 @@ class ApartmentList extends ConsumerWidget {
       context: context,
       builder: (context) {
         final amountController = TextEditingController();
-        return AlertDialog(
-          title: Text('Appartement ${apt.number}'),
-          content: SizedBox(
-            width: double.maxFinite,
+        // Use Flex/Expanded to handle different screen sizes as per "Responsive UI" constraint
+        return Dialog(
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            constraints: const BoxConstraints(maxHeight: 500),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Propriétaire: ${apt.ownerName}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                Text('Appartement ${apt.number}', style: Theme.of(context).textTheme.titleLarge),
+                const SizedBox(height: 8),
+                Text('Propriétaire: ${apt.ownerName}'),
                 const Divider(),
-                const Text('Historique récent', style: TextStyle(fontWeight: FontWeight.bold)),
-                SizedBox(
-                  height: 150,
+                Text('Historique récent', style: Theme.of(context).textTheme.titleSmall),
+                const SizedBox(height: 8),
+                Expanded(
                   child: StreamBuilder<List<Transaction>>(
                     stream: ref.watch(financialRepositoryProvider).watchTransactions(apt.id),
                     builder: (context, snapshot) {
@@ -194,27 +197,22 @@ class ApartmentList extends ConsumerWidget {
                         return const Center(child: Text('Aucune transaction'));
                       }
                       final transactions = snapshot.data!;
+                      // ListView.builder strictly used as requested
                       return ListView.builder(
                         itemCount: transactions.length,
                         itemBuilder: (context, index) {
                           final tx = transactions[index];
                           return ListTile(
                             dense: true,
+                            contentPadding: EdgeInsets.zero,
                             title: Text('${tx.amount} DH - ${tx.type}'),
                             subtitle: Text(tx.date.toString().split(' ')[0]),
                             trailing: tx.type == 'INCOME'
                                 ? IconButton(
                                     icon: const Icon(Icons.print, size: 20),
                                     onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (_) => PdfViewerScreen(
-                                            title: 'Reçu N°${tx.id}',
-                                            buildPdf: (format) => ref.read(pdfServiceProvider).generateReceiptPdf(tx.id),
-                                          ),
-                                        ),
-                                      );
+                                      // Hybrid Workflow for Receipts
+                                      _handleReceiptAction(context, ref, tx);
                                     },
                                   )
                                 : null,
@@ -225,42 +223,115 @@ class ApartmentList extends ConsumerWidget {
                   ),
                 ),
                 const Divider(),
-                const Text('Nouveau Paiement (INCOME)', style: TextStyle(fontWeight: FontWeight.bold)),
+                Text('Nouveau Paiement (INCOME)', style: Theme.of(context).textTheme.titleSmall),
                 TextField(
                   controller: amountController,
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(labelText: 'Montant (DH)'),
                 ),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('Fermer'),
+                    ),
+                    const SizedBox(width: 8),
+                    ElevatedButton(
+                      onPressed: () async {
+                        final amount = double.tryParse(amountController.text);
+                        if (amount != null) {
+                          final repo = ref.read(financialRepositoryProvider);
+                          await repo.addTransaction(TransactionsCompanion(
+                            apartmentId: drift.Value(apt.id),
+                            type: const drift.Value('INCOME'),
+                            amount: drift.Value(amount),
+                            date: drift.Value(DateTime.now()),
+                            description: const drift.Value('Paiement Cotisation'),
+                            category: const drift.Value('Cotisation'),
+                          ));
+                          amountController.clear();
+                        }
+                      },
+                      child: const Text('Enregistrer'),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Fermer'),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                final amount = double.tryParse(amountController.text);
-                if (amount != null) {
-                  final repo = ref.read(financialRepositoryProvider);
-                  await repo.addTransaction(TransactionsCompanion(
-                    apartmentId: drift.Value(apt.id),
-                    type: const drift.Value('INCOME'),
-                    amount: drift.Value(amount),
-                    date: drift.Value(DateTime.now()),
-                    description: const drift.Value('Paiement Cotisation'),
-                    category: const drift.Value('Cotisation'),
-                  ));
-                  // Do not close dialog to show update
-                  amountController.clear();
-                }
-              },
-              child: const Text('Enregistrer Paiement'),
-            ),
-          ],
         );
       },
+    );
+  }
+
+  Future<void> _handleReceiptAction(
+    BuildContext context,
+    WidgetRef ref,
+    Transaction tx,
+  ) async {
+    final fileName = 'Recu_${tx.id}.pdf';
+
+    // Show Modal
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(24),
+        height: 200,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text('Reçu N°${tx.id}',
+                style: const TextStyle(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+            const SizedBox(height: 24),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton.icon(
+                    icon: const Icon(Icons.save),
+                    label: const Text('ENREGISTRER'),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green, foregroundColor: Colors.white),
+                    onPressed: () async {
+                       Navigator.pop(context);
+                       try {
+                         final bytes = await ref.read(pdfServiceProvider).generateReceiptPdf(tx.id);
+                         await ref.read(pdfServiceProvider).savePdfToRootFolder(fileName, bytes);
+                         if (context.mounted) {
+                           ScaffoldMessenger.of(context).showSnackBar(
+                             const SnackBar(content: Text('Reçu sauvegardé')),
+                           );
+                         }
+                       } catch (e) {
+                         if (context.mounted) {
+                           ScaffoldMessenger.of(context).showSnackBar(
+                             SnackBar(content: Text('Erreur: $e'), backgroundColor: Colors.red),
+                           );
+                         }
+                       }
+                    },
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: ElevatedButton.icon(
+                    icon: const Icon(Icons.print),
+                    label: const Text('IMPRIMER'),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue, foregroundColor: Colors.white),
+                    onPressed: () async {
+                      Navigator.pop(context);
+                      final bytes = await ref.read(pdfServiceProvider).generateReceiptPdf(tx.id);
+                      ref.read(pdfServiceProvider).printOrSharePdf(fileName, bytes);
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -13,19 +13,9 @@ Stream<List<Apartment>> apartmentsStream(ApartmentsStreamRef ref) {
 @riverpod
 Stream<double> apartmentBalance(ApartmentBalanceRef ref, int apartmentId) async* {
   final repo = ref.watch(financialRepositoryProvider);
-
-  // Create a combined stream or just re-evaluate when dependencies change.
-  // Since we are inside a provider, we can watch other providers.
-  // But calculateBalance is async and depends on DB.
-
-  // Simple approach: Watch the transaction stream for this apartment.
-  // And assume apartment details don't change often or trigger a refresh manually.
-  // Ideally, we watch both.
-
   final transactionsStream = repo.watchTransactions(apartmentId);
 
   await for (final _ in transactionsStream) {
-    // When transactions change, recalculate
     final apartments = await repo.getApartments();
     try {
       final apartment = apartments.firstWhere((element) => element.id == apartmentId);
@@ -89,7 +79,7 @@ class FinancialRepository {
     return (_db.delete(_db.transactions)..where((t) => t.id.equals(id))).go();
   }
 
-  // Global Expenses (transactions with null apartmentId)
+  // Global Expenses
   Stream<List<Transaction>> watchGlobalTransactions() {
     return (_db.select(_db.transactions)..where((t) => t.apartmentId.isNull())).watch();
   }
@@ -105,23 +95,12 @@ class FinancialRepository {
   // Balance Calculation
   Future<double> calculateBalance(Apartment apartment) async {
     final now = DateTime.now();
-
-    // Calculate months due
-    // Example: Entry 2023-01-01. Now 2023-02-01. Months = 1?
-    // Formula: (now.year - start.year) * 12 + now.month - start.month
-    // 2023-02 - 2023-01 = 1 month.
     int monthsDue = (now.year - apartment.entryDate.year) * 12 + (now.month - apartment.entryDate.month);
-
-    // Adjust if day of month hasn't passed? Usually simplified to month difference.
-    // If entry date is 2023-01-15 and now is 2023-02-10, is it 1 month?
-    // Simple month diff says yes (2-1=1).
-    // Prompt says: "Calculer le nombre de mois écoulés entre entry_date et DateTime.now()."
-
     if (monthsDue < 0) monthsDue = 0;
 
     final theoreticalDebt = monthsDue * apartment.monthlyFee;
 
-    // Calculate Total Paid (INCOME)
+    // Optimized SQL SUM for income
     final query = _db.selectOnly(_db.transactions)
       ..addColumns([_db.transactions.amount.sum()])
       ..where(_db.transactions.apartmentId.equals(apartment.id))
@@ -130,7 +109,29 @@ class FinancialRepository {
     final result = await query.getSingle();
     final totalPaid = result.read(_db.transactions.amount.sum()) ?? 0.0;
 
-    // Balance = (Total Paid + Initial Balance) - Theoretical Debt
     return (totalPaid + apartment.soldeInitial) - theoreticalDebt;
+  }
+
+  // Optimized Global Summary
+  Future<Map<String, double>> getFinancialSummary() async {
+    // Total Income
+    final incomeQuery = _db.selectOnly(_db.transactions)
+      ..addColumns([_db.transactions.amount.sum()])
+      ..where(_db.transactions.type.equals('INCOME'));
+    final incomeResult = await incomeQuery.getSingle();
+    final totalIncome = incomeResult.read(_db.transactions.amount.sum()) ?? 0.0;
+
+    // Total Expenses
+    final expenseQuery = _db.selectOnly(_db.transactions)
+      ..addColumns([_db.transactions.amount.sum()])
+      ..where(_db.transactions.type.equals('EXPENSE'));
+    final expenseResult = await expenseQuery.getSingle();
+    final totalExpense = expenseResult.read(_db.transactions.amount.sum()) ?? 0.0;
+
+    return {
+      'income': totalIncome,
+      'expense': totalExpense,
+      'net': totalIncome - totalExpense,
+    };
   }
 }
