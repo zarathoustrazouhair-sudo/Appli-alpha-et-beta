@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/db/app_db.dart';
 import '../../data/repositories/financial_repo.dart';
 import '../../data/repositories/settings_repo.dart';
+import '../../services/pdf_generator/pdf_service.dart';
 import '../widgets/apartment_card.dart';
 import 'reports_screen.dart';
 import 'settings_screen.dart';
