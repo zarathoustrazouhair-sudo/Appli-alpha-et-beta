@@ -10,7 +10,6 @@ class AppTheme {
       primary: const Color(0xFF2C3E50),
       secondary: const Color(0xFF34495E),
       tertiary: const Color(0xFFE67E22), // Accent
-      background: const Color(0xFFF5F6FA),
       surface: Colors.white,
     ),
     textTheme: GoogleFonts.openSansTextTheme(),
@@ -19,11 +18,6 @@ class AppTheme {
       elevation: 0,
       backgroundColor: Colors.transparent,
       foregroundColor: Color(0xFF2C3E50),
-    ),
-    cardTheme: CardTheme(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      color: Colors.white,
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
