@@ -8,7 +8,7 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/glass_card.dart';
 import '../../transactions/data/transaction_repository.dart';
 import '../../residents/presentation/residents_controller.dart';
-import '../../../../domain/entities/resident.dart'; // Import Resident entity
+import '../../../../data/models/resident.dart'; // Import Resident entity
 import '../../residents/presentation/resident_detail_screen.dart';
 import '../../transactions/presentation/transaction_entry_screen.dart';
 import '../../sync/data/sync_service.dart';
@@ -16,7 +16,7 @@ import '../../dashboard/presentation/global_situation_screen.dart';
 import '../../../data/database/database.dart' as db; // Alias database import
 import '../../../core/services/eco_pdf_service.dart';
 import '../../../features/incidents/data/incident_repository.dart';
-import '../../../../domain/repositories/resident_repository.dart'; // Ensure repository is imported
+import '../../../../data/repositories/resident_repository.dart'; // Ensure repository is imported
 
 // PROVIDERS (LOCAL CALCS)
 final treasuryRunwayProvider = Provider.autoDispose<String>((ref) {

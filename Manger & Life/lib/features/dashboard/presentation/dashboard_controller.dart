@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../../../../domain/repositories/resident_repository.dart';
-import '../../../../domain/entities/resident.dart';
+import '../../../../data/repositories/resident_repository.dart';
+import '../../../../data/models/resident.dart';
 import '../domain/dashboard_state.dart';
 import '../../transactions/data/transaction_repository.dart';
 

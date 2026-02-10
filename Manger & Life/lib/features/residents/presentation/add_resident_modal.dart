@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../domain/entities/resident.dart';
+import '../../../data/models/resident.dart';
 import 'residents_controller.dart';
 
 class AddResidentModal extends ConsumerStatefulWidget {

@@ -3,7 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:drift/drift.dart' as drift;
 import '../../../data/database/database.dart';
 import '../../../data/database/database_provider.dart';
-import '../../../domain/entities/expense.dart' as entity;
+import '../../../data/models/expense.dart' as entity;
 
 part 'expense_repository.g.dart';
 

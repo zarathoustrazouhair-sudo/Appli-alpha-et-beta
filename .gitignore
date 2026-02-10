@@ -51,3 +51,7 @@ LIVRAISON_APKS_FINAUX/
 *.apk
 *.zip
 final_migration_fix.py
+
+# Generated files
+*.g.dart
+*.freezed.dart

@@ -1,0 +1,11 @@
+commit 50f5c682de94d498dd92885a1bc2f74942cba075
+Author: google-labs-jules[bot] <161369871+google-labs-jules[bot]@users.noreply.github.com>
+Date:   Tue Feb 10 09:37:29 2026 +0000
+
+    Add missing Manger & Life source code and assets
+
+commit b1c970a2eaa985693668fd85c75eeffd7c160595
+Author: Admin Migration <admin@amandier.com>
+Date:   Mon Feb 9 23:19:48 2026 +0000
+
+    MIGRATION FINALE : VM + GITHUB UNIFIÉS

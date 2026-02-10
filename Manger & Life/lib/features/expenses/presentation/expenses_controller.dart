@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../../../domain/entities/expense.dart';
+import '../../../data/models/expense.dart';
 import '../../dashboard/presentation/dashboard_controller.dart';
 import '../domain/expense_repository.dart';
 

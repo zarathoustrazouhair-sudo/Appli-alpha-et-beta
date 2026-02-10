@@ -5,7 +5,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 import '../../data/database/database.dart';
-import '../../domain/entities/resident.dart' as domain;
+import '../../data/models/resident.dart' as domain;
 
 // DTO for Financial Stats
 class FinancialStats {

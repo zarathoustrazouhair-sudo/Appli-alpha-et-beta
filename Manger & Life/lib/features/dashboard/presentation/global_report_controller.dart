@@ -1,6 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../../core/services/eco_pdf_service.dart';
-import '../../../../domain/repositories/resident_repository.dart';
+import '../../../../data/repositories/resident_repository.dart';
 import '../../settings/presentation/settings_controller.dart';
 import 'package:printing/printing.dart';
 
