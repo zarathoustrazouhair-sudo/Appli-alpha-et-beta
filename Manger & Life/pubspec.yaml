@@ -1,0 +1,60 @@
+name: syndic_pro
+description: "A new Flutter project."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+
+  # Persistence
+  drift: ^2.16.0
+  sqlite3_flutter_libs: ^0.5.18
+  sqlite3: ^2.0.0
+  path_provider: ^2.1.5
+  path: ^1.8.3
+
+  # State Management
+  flutter_riverpod: ^2.4.10
+  riverpod_annotation: ^2.3.4
+
+  # Utils
+  pdf: ^3.10.8
+  printing: ^5.14.2
+  flutter_image_compress: ^2.1.0
+  url_launcher: ^6.3.2
+  image_picker: ^1.0.7
+  fl_chart: ^0.65.0
+  intl: ^0.20.2
+
+  # Code Gen Annotations
+  freezed_annotation: ^2.4.1
+  json_annotation: ^4.8.1
+  share_plus: ^12.0.1
+  screenshot: ^3.0.0
+  supabase_flutter: ^2.12.0
+  percent_indicator: ^4.2.5
+  audioplayers: ^6.5.1
+  flutter_dotenv: ^6.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.1
+
+  # Generators
+  build_runner: ^2.4.8
+  drift_dev: ^2.16.0
+  riverpod_generator: ^2.3.9
+  freezed: ^2.4.7
+  json_serializable: ^6.7.1
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - .env
