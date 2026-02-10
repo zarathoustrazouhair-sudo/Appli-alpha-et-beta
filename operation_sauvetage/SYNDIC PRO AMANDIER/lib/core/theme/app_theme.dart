@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  // Dark Prestige Palette (Gold Master Requirements)
-  static const Color scaffoldColor = Color(0xFF121212); // Deep Black
-  static const Color surfaceColor = Color(0xFF1E1E1E); // Dark Grey
-  static const Color cardColor = Color(0xFF2C2C2C); // Anthracite Grey
-  static const Color primaryColor = Color(0xFFD4AF37); // Gold Metallic
-  static const Color secondaryColor = Color(0xFFC5A059); // Amandier Gold
-  static const Color errorColor = Color(0xFFCF6679);
+  // Cyber-Prestige Palette (HUD Upgrade)
+  static const Color scaffoldColor = Color(0xFF050505); // Deep OLED Black
+  static const Color surfaceColor = Color(0xFF121212); // Darker Grey
+  static const Color cardColor = Color(0xFF1A1A1A); // Almost Black
+  static const Color primaryColor = Color(0xFFFFD700); // Cyber Gold
+  static const Color secondaryColor = Color(0xFFD4AF37); // Metallic Gold
+  static const Color successColor = Color(0xFF34C759); // Neon Green
+  static const Color errorColor = Color(0xFFFF3B30); // Neon Red
 
   // Typography Colors
   static const Color textTitleColor = Color(0xFFFFFFFF); // White
@@ -109,7 +110,7 @@ class AppTheme {
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+        borderSide: BorderSide(color: Colors.white.withOpacity(0.1)),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
