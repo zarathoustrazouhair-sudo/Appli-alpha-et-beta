@@ -55,3 +55,4 @@ final_migration_fix.py
 # Generated files
 *.g.dart
 *.freezed.dart
+.env
