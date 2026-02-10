@@ -7,6 +7,27 @@ import 'package:path/path.dart' as p;
 import '../../data/database/database.dart';
 import '../../domain/entities/resident.dart' as domain;
 
+// DTO for Financial Stats
+class FinancialStats {
+  final double totalDebt;
+  final double lastMonthExpenses;
+  final double totalExpenses;
+
+  FinancialStats({
+    required this.totalDebt,
+    required this.lastMonthExpenses,
+    required this.totalExpenses,
+  });
+}
+
+// DTO for Resident Report Row
+class ResidentReportItem {
+  final domain.Resident resident;
+  final double balance;
+
+  ResidentReportItem({required this.resident, required this.balance});
+}
+
 class EcoPdfService {
   final Map<String, String> config;
 
@@ -34,7 +55,6 @@ class EcoPdfService {
     if (customPath != null && File(customPath).existsSync()) {
       return pw.MemoryImage(File(customPath).readAsBytesSync());
     }
-    // Fallback to asset if exists (optional, or return null for text-only)
     try {
       final logoBytes = await rootBundle.load('assets/images/logo.png');
       return pw.MemoryImage(logoBytes.buffer.asUint8List());
@@ -63,7 +83,7 @@ class EcoPdfService {
             pw.Text(
               residence,
               style: _getSerifStyle(isBold: true, fontSize: 14),
-            ), // Text fallback
+            ),
 
           pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.end,
@@ -99,6 +119,12 @@ class EcoPdfService {
             "Données personnelles protégées (Loi 09-08).",
             style: _getSerifStyle(fontSize: 8),
           ),
+          pw.SizedBox(height: 4),
+          pw.Text(
+            "Ce rapport est généré automatiquement par l'application Amandier Manager. Si vous constatez une erreur, merci de prendre contact avec le Syndic ou son Adjoint.",
+            style: _getSerifStyle(fontSize: 6, isItalic: true, color: PdfColors.grey),
+            textAlign: pw.TextAlign.center,
+          ),
         ],
       ),
     );
@@ -110,6 +136,166 @@ class EcoPdfService {
     await file.writeAsBytes(await pdf.save());
     return file;
   }
+
+  // Helper: Paid Until Calculation
+  String _calculatePaidUntil(double balance, int monthlyFee) {
+    if (balance <= 0) return "⚠️ RETARD";
+    if (monthlyFee <= 0) return "N/A";
+
+    final monthsAdvance = (balance / monthlyFee).floor();
+    if (monthsAdvance < 1) return "✅ À jour";
+
+    return "✅ +$monthsAdvance Mois";
+  }
+
+  // GOD VIEW REPORT
+  Future<File> generateGlobalReport(
+    List<ResidentReportItem> items,
+    FinancialStats stats,
+  ) async {
+    final pdf = pw.Document();
+    final logo = await _loadLogo();
+    final date = DateTime.now();
+    final monthStr = "${date.month}/${date.year}";
+
+    pdf.addPage(
+      pw.Page(
+        pageFormat: PdfPageFormat.a4,
+        margin: const pw.EdgeInsets.all(30),
+        build: (context) => pw.Column(
+          children: [
+            // Header
+            pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+              children: [
+                if (logo != null) pw.Image(logo, width: 50, height: 50),
+                pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.end,
+                  children: [
+                    pw.Text(
+                      "ÉTAT DES COTISATIONS",
+                      style: pw.TextStyle(
+                        font: pw.Font.helveticaBold(), // Modern bold
+                        fontSize: 18,
+                      ),
+                    ),
+                    pw.Text(
+                      "MOIS DE $monthStr",
+                      style: pw.TextStyle(
+                        font: pw.Font.helvetica(),
+                        fontSize: 12,
+                        color: PdfColors.grey700,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            pw.SizedBox(height: 20),
+            pw.Divider(thickness: 0.5, color: PdfColors.grey400),
+            pw.SizedBox(height: 10),
+
+            // Table Header
+            pw.Row(
+              children: [
+                pw.Expanded(flex: 15, child: pw.Text("ÉTAGE", style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 10, color: PdfColors.grey700))),
+                pw.Expanded(flex: 15, child: pw.Text("APPART.", style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 10, color: PdfColors.grey700))),
+                pw.Expanded(flex: 30, child: pw.Text("NOM & PRÉNOM", style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 10, color: PdfColors.grey700))),
+                pw.Expanded(flex: 20, child: pw.Text("SITUATION", style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 10, color: PdfColors.grey700))),
+                pw.Expanded(flex: 20, child: pw.Text("PAYÉ JUSQU'À", style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 10, color: PdfColors.grey700))),
+              ],
+            ),
+            pw.Divider(thickness: 0.5),
+
+            // Table Rows
+            ...items.map((item) {
+              final r = item.resident;
+              final balance = item.balance;
+              final balanceStr = "${balance > 0 ? '+' : ''}${balance.toStringAsFixed(0)} DH";
+              final paidUntil = _calculatePaidUntil(balance, r.monthlyFee);
+
+              final floorStr = r.floor != null ? "${r.floor}ème" : "RDC";
+
+              return pw.Container(
+                padding: const pw.EdgeInsets.symmetric(vertical: 6),
+                decoration: const pw.BoxDecoration(
+                  border: pw.Border(bottom: pw.BorderSide(width: 0.2, color: PdfColors.grey300)),
+                ),
+                child: pw.Row(
+                  children: [
+                    pw.Expanded(flex: 15, child: pw.Text(floorStr, style: const pw.TextStyle(fontSize: 10))),
+                    pw.Expanded(flex: 15, child: pw.Text(r.apartment, style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 12))),
+                    pw.Expanded(flex: 30, child: pw.Text(r.name, style: const pw.TextStyle(fontSize: 10))),
+                    pw.Expanded(
+                      flex: 20,
+                      child: pw.Text(
+                        balanceStr,
+                        style: pw.TextStyle(
+                          fontWeight: pw.FontWeight.bold,
+                          fontSize: 10,
+                          color: balance < 0 ? PdfColors.red : PdfColors.black,
+                        ),
+                      ),
+                    ),
+                    pw.Expanded(
+                      flex: 20,
+                      child: pw.Text(
+                        paidUntil,
+                        style: pw.TextStyle(
+                          fontSize: 10,
+                          color: paidUntil.contains("RETARD") ? PdfColors.red : PdfColors.green,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }),
+
+            pw.Spacer(),
+
+            // Footer KPIs
+            pw.Container(
+              padding: const pw.EdgeInsets.all(10),
+              decoration: const pw.BoxDecoration(
+                color: PdfColors.grey100,
+                borderRadius: pw.BorderRadius.all(pw.Radius.circular(4)),
+              ),
+              child: pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceAround,
+                children: [
+                  pw.Column(
+                    children: [
+                      pw.Text("RESTE À RECOUVRER", style: pw.TextStyle(fontSize: 8, color: PdfColors.grey700)),
+                      pw.Text("${stats.totalDebt.abs().toStringAsFixed(0)} DH", style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 12, color: PdfColors.red)),
+                    ],
+                  ),
+                  pw.Column(
+                    children: [
+                      pw.Text("DÉPENSES (M-1)", style: pw.TextStyle(fontSize: 8, color: PdfColors.grey700)),
+                      pw.Text("${stats.lastMonthExpenses.toStringAsFixed(0)} DH", style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 12)),
+                    ],
+                  ),
+                  pw.Column(
+                    children: [
+                      pw.Text("CUMUL DÉPENSES", style: pw.TextStyle(fontSize: 8, color: PdfColors.grey700)),
+                      pw.Text("${stats.totalExpenses.toStringAsFixed(0)} DH", style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 12)),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+
+            pw.SizedBox(height: 10),
+            _buildFooter(),
+          ],
+        ),
+      ),
+    );
+    return _savePdf(pdf, 'etat_global_${date.millisecondsSinceEpoch}.pdf');
+  }
+
+  // --- EXISTING METHODS (UNCHANGED) ---
 
   // 1. APPEL DE FONDS
   Future<File> generateAppelDeFonds(
