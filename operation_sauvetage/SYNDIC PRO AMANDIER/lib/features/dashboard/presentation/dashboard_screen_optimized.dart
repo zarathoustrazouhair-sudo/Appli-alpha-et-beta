@@ -7,11 +7,12 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/glass_card.dart';
 import '../../transactions/data/transaction_repository.dart';
 import '../../residents/presentation/residents_controller.dart';
+import '../../../../domain/entities/resident.dart'; // Import Resident entity
 import '../../residents/presentation/resident_detail_screen.dart';
 import '../../transactions/presentation/transaction_entry_screen.dart';
 import '../../sync/data/sync_service.dart';
 import '../../dashboard/presentation/global_situation_screen.dart';
-import '../../../data/database/database.dart'; // Import for Transaction class
+import '../../../data/database/database.dart' as db; // Alias database import to avoid conflict
 
 // PROVIDERS (LOCAL CALCS)
 final treasuryRunwayProvider = Provider.autoDispose<String>((ref) {
@@ -57,7 +58,7 @@ class _DashboardScreenOptimizedState
   Widget build(BuildContext context) {
     final balanceAsync = ref.watch(totalClass5Stream);
     final runway = ref.watch(treasuryRunwayProvider);
-    final transactionsAsync = ref.watch(recentTransactionsStream); // Use Transactions
+    final transactionsAsync = ref.watch(recentTransactionsStream);
 
     return Scaffold(
       backgroundColor: AppTheme.scaffoldColor,
@@ -489,78 +490,89 @@ class _CockpitMatrix extends ConsumerWidget {
           itemCount: sorted.length,
           itemBuilder: (context, index) {
             final resident = sorted[index];
-            final balanceAsync = ref.watch(residentBalanceProvider(resident));
-
-            return balanceAsync.when(
-              data: (balance) {
-                // LOGIC COULEUR
-                Color borderColor = AppTheme.successColor; // Default Green (0)
-                Color? fillColors;
-                bool isGlow = false;
-
-                if (balance < -1) {
-                  // DETTE (Negatif) -> ROUGE
-                  borderColor = AppTheme.errorColor;
-                  isGlow = true;
-                } else if (balance > 1) {
-                  // CREDIT (Positif) -> OR
-                  borderColor = AppTheme.primaryColor;
-                  fillColors = AppTheme.primaryColor.withOpacity(0.2);
-                  isGlow = true;
-                }
-
-                return InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => ResidentDetailScreen(resident: resident),
-                      ),
-                    );
-                  },
-                  borderRadius: BorderRadius.circular(8),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: fillColors ?? Colors.transparent,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: borderColor, width: 1.5),
-                      boxShadow: isGlow
-                          ? [
-                              BoxShadow(
-                                color: borderColor.withOpacity(0.4),
-                                blurRadius: 8,
-                                spreadRadius: 1,
-                              )
-                            ]
-                          : [],
-                    ),
-                    child: Center(
-                      child: Text(
-                        resident.apartment,
-                        style: TextStyle(
-                          color: borderColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              },
-              loading: () => Container(
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.05),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              error: (_, __) => Container(color: Colors.red),
-            );
+            // Extract cell to separate ConsumerWidget to correctly watch individual provider
+            return _ResidentMatrixCell(resident: resident);
           },
         );
       },
       loading: () => const Center(
           child: CircularProgressIndicator(color: AppTheme.primaryColor)),
       error: (_, __) => const SizedBox(),
+    );
+  }
+}
+
+class _ResidentMatrixCell extends ConsumerWidget {
+  final Resident resident;
+  const _ResidentMatrixCell({required this.resident});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final balanceAsync = ref.watch(residentBalanceProvider(resident));
+
+    return balanceAsync.when(
+      data: (balance) {
+        // LOGIC COULEUR
+        Color borderColor = AppTheme.successColor; // Default Green (0)
+        Color? fillColors;
+        bool isGlow = false;
+
+        if (balance < -1) {
+          // DETTE (Negatif) -> ROUGE
+          borderColor = AppTheme.errorColor;
+          isGlow = true;
+        } else if (balance > 1) {
+          // CREDIT (Positif) -> OR
+          borderColor = AppTheme.primaryColor;
+          fillColors = AppTheme.primaryColor.withOpacity(0.2);
+          isGlow = true;
+        }
+
+        return InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => ResidentDetailScreen(resident: resident),
+              ),
+            );
+          },
+          borderRadius: BorderRadius.circular(8),
+          child: Container(
+            decoration: BoxDecoration(
+              color: fillColors ?? Colors.transparent,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: borderColor, width: 1.5),
+              boxShadow: isGlow
+                  ? [
+                      BoxShadow(
+                        color: borderColor.withOpacity(0.4),
+                        blurRadius: 8,
+                        spreadRadius: 1,
+                      )
+                    ]
+                  : [],
+            ),
+            child: Center(
+              child: Text(
+                resident.apartment,
+                style: TextStyle(
+                  color: borderColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+      loading: () => Container(
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.05),
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+      error: (_, __) => Container(color: Colors.red),
     );
   }
 }
