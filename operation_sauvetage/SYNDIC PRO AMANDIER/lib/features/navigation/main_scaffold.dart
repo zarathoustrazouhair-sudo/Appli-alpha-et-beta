@@ -5,6 +5,7 @@ import '../../features/tasks/presentation/copilot_screen.dart';
 import '../../features/transactions/presentation/transactions_history_screen.dart';
 import '../../features/incidents/presentation/incidents_listener.dart'; // Import Siren
 import '../../features/settings/presentation/settings_screen.dart';
+import '../../core/theme/app_theme.dart'; // Use centralized theme constants
 
 class MainScaffold extends StatefulWidget {
   const MainScaffold({super.key});
@@ -28,14 +29,25 @@ class _MainScaffoldState extends State<MainScaffold> {
     return IncidentsListener(
       // Wrap with Siren
       child: Scaffold(
+        backgroundColor: AppTheme.scaffoldColor,
+        // AppBar is handled individually by screens or globally here if needed.
+        // Dashboard usually has its own custom header.
         appBar: _currentIndex == 0
-            ? null
+            ? null // Dashboard has its own header
             : AppBar(
-                // Hide AppBar on Dashboard (it has its own)
                 title: const Text('AMANDIER MANAGER'),
+                backgroundColor: AppTheme.surfaceColor,
+                elevation: 0,
+                centerTitle: true,
+                titleTextStyle: const TextStyle(
+                   color: AppTheme.primaryColor,
+                   fontWeight: FontWeight.bold,
+                   letterSpacing: 1.2,
+                   fontSize: 20,
+                ),
                 actions: [
                   IconButton(
-                    icon: const Icon(Icons.settings),
+                    icon: const Icon(Icons.settings, color: AppTheme.textSubtitleColor),
                     onPressed: () => Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -50,16 +62,22 @@ class _MainScaffoldState extends State<MainScaffold> {
           currentIndex: _currentIndex,
           onTap: (index) => setState(() => _currentIndex = index),
           type: BottomNavigationBarType.fixed,
-          backgroundColor: const Color(0xFF1E1E1E), // Dark Grey
-          selectedItemColor: const Color(0xFFD4AF37), // Gold
-          unselectedItemColor: Colors.grey,
+          backgroundColor: AppTheme.surfaceColor, // Dark Grey from Theme
+          selectedItemColor: AppTheme.primaryColor, // Gold from Theme
+          unselectedItemColor: AppTheme.textSubtitleColor, // Grey from Theme
           showUnselectedLabels: true,
+          elevation: 8,
           items: const [
             BottomNavigationBarItem(
-              icon: Icon(Icons.dashboard),
+              icon: Icon(Icons.dashboard_outlined),
+              activeIcon: Icon(Icons.dashboard),
               label: 'Tableau Bord',
             ),
-            BottomNavigationBarItem(icon: Icon(Icons.build), label: 'Gestion'),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.build_outlined),
+              activeIcon: Icon(Icons.build),
+              label: 'Gestion',
+            ),
             BottomNavigationBarItem(
               icon: Icon(Icons.attach_money),
               label: 'Finances',

@@ -1,92 +1,99 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  // Dark Prestige Palette
+  // Dark Prestige Palette (Gold Master Requirements)
   static const Color scaffoldColor = Color(0xFF121212); // Deep Black
   static const Color surfaceColor = Color(0xFF1E1E1E); // Dark Grey
-  static const Color primaryColor = Color(0xFF102A43); // Royal Navy Blue
-  static const Color accentColor = Color(0xFFD4AF37); // Gold
+  static const Color cardColor = Color(0xFF2C2C2C); // Anthracite Grey
+  static const Color primaryColor = Color(0xFFD4AF37); // Gold Metallic
+  static const Color secondaryColor = Color(0xFFC5A059); // Amandier Gold
   static const Color errorColor = Color(0xFFCF6679);
+
+  // Typography Colors
+  static const Color textTitleColor = Color(0xFFFFFFFF); // White
+  static const Color textSubtitleColor = Color(0xFFB0B0B0); // Light Grey
 
   static final ThemeData darkTheme = ThemeData(
     useMaterial3: true,
     brightness: Brightness.dark,
     scaffoldBackgroundColor: scaffoldColor,
+
+    // Color Scheme
     colorScheme: const ColorScheme.dark(
       primary: primaryColor,
-      secondary: accentColor,
+      secondary: secondaryColor,
       surface: surfaceColor,
       error: errorColor,
-      onPrimary: Colors.white,
+      onPrimary: Colors.black, // Text on Gold should be black for contrast
       onSecondary: Colors.black,
-      onSurface: Color(0xFFE0E0E0),
+      onSurface: textTitleColor,
     ),
 
-    // Card Theme - Corrected Assignment using CardThemeData if available, or just verify if CardTheme is data class.
-    // In Flutter 3.10+, CardTheme is data. CardTheme (Widget) is just a theme provider.
-    // Wait, ThemeData.cardTheme expects CardTheme. CardTheme extends Diagnosticable (Data).
-    // The previous error was: "The argument type 'CardTheme' can't be assigned to the parameter type 'CardThemeData?'".
-    // This implies ThemeData field is 'CardThemeData?'. So I MUST use 'CardThemeData'.
+    // Card Theme
     cardTheme: CardThemeData(
-      color: surfaceColor,
+      color: cardColor,
       elevation: 4,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: Colors.white.withValues(alpha: 0.05)),
+        borderRadius: BorderRadius.circular(16), // Radius 16 as requested
       ),
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
     ),
 
     // AppBar Theme
     appBarTheme: const AppBarTheme(
       backgroundColor: scaffoldColor,
-      foregroundColor: Colors.white,
+      foregroundColor: primaryColor, // Gold icons/text
       elevation: 0,
       centerTitle: true,
       titleTextStyle: TextStyle(
-        fontFamily: 'Serif', // Using default serif for now
+        fontFamily: 'Serif',
         fontSize: 22,
         fontWeight: FontWeight.bold,
-        color: accentColor,
+        color: primaryColor, // Gold Title
         letterSpacing: 1.2,
       ),
     ),
 
     // Text Theme
     textTheme: const TextTheme(
+      // Large Titles
       displayLarge: TextStyle(
         fontFamily: 'Serif',
         fontSize: 32,
         fontWeight: FontWeight.bold,
-        color: Colors.white,
+        color: textTitleColor,
       ),
+      // Section Headers
       headlineMedium: TextStyle(
         fontFamily: 'Serif',
         fontSize: 24,
         fontWeight: FontWeight.bold,
-        color: accentColor,
+        color: primaryColor, // Gold
       ),
+      // Card Titles
       titleMedium: TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.w600,
-        color: Colors.white,
+        color: textTitleColor,
       ),
+      // Subtitles / Body text
       bodyMedium: TextStyle(
         fontSize: 14,
-        color: Color(0xFFBDBDBD),
-      ), // Grey[400] approx
+        color: textSubtitleColor,
+      ),
     ),
 
     // Button Theme
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: accentColor,
-        foregroundColor: Colors.black, // Text on Gold
+        backgroundColor: primaryColor, // Gold
+        foregroundColor: Colors.black, // Black Text
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         textStyle: const TextStyle(
           fontWeight: FontWeight.bold,
           letterSpacing: 1.0,
         ),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     ),
 
@@ -94,19 +101,26 @@ class AppTheme {
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: surfaceColor,
-      labelStyle: const TextStyle(color: Color(0xFFBDBDBD)),
+      labelStyle: const TextStyle(color: textSubtitleColor),
+      hintStyle: const TextStyle(color: textSubtitleColor),
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8),
-        borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide.none,
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8),
-        borderSide: const BorderSide(color: accentColor),
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: primaryColor),
       ),
+    ),
+
+    // Floating Action Button
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
+      backgroundColor: primaryColor,
+      foregroundColor: Colors.black,
     ),
   );
 }
