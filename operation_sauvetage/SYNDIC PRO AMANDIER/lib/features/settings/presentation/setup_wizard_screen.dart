@@ -33,7 +33,7 @@ class _SetupWizardScreenState extends ConsumerState<SetupWizardScreen> {
 
   // Slide 3: Juridique
   final _residenceNameCtrl = TextEditingController(
-    text: "RÉSIDENCE L'AMANDIER B",
+    text: "RÉSIDENCE EXEMPLE",
   );
   final _jurisdictionCtrl = TextEditingController(
     text: "Tribunal de Première Instance de CASABLANCA",

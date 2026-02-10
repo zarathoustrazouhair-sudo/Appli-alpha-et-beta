@@ -43,8 +43,8 @@ class PdfService {
     final receiptId = '${now.year}-${payment.id}';
     final amountWords = Formatters.amountToWords(payment.amount);
 
-    final residenceName = config['RESIDENCE_NAME'] ?? 'SYNDIC L\'AMANDIER B';
-    final syndicName = config['SYNDIC_NAME'] ?? 'M. Abdelati KENBOUCHI';
+    final residenceName = config['RESIDENCE_NAME'] ?? 'RÉSIDENCE';
+    final syndicName = config['SYNDIC_NAME'] ?? 'M. SYNDIC';
     final city = config['CITY'] ?? 'Bouskoura';
 
     pdf.addPage(
@@ -309,9 +309,9 @@ class PdfService {
     final pdf = pw.Document();
     final logoImage = await _loadLogo();
 
-    final residenceName = config['RESIDENCE_NAME'] ?? 'SYNDIC L\'AMANDIER B';
-    final city = config['CITY'] ?? 'Bouskoura';
-    final syndicName = config['SYNDIC_NAME'] ?? 'M. Abdelati KENBOUCHI';
+    final residenceName = config['RESIDENCE_NAME'] ?? 'RÉSIDENCE';
+    final city = config['CITY'] ?? 'VILLE';
+    final syndicName = config['SYNDIC_NAME'] ?? 'M. SYNDIC';
 
     pdf.addPage(
       pw.Page(
@@ -420,8 +420,8 @@ class PdfService {
     final pdf = pw.Document();
     final logoImage = await _loadLogo();
 
-    final residenceName = config['RESIDENCE_NAME'] ?? 'SYNDIC L\'AMANDIER B';
-    final syndicName = config['SYNDIC_NAME'] ?? 'M. Abdelati KENBOUCHI';
+    final residenceName = config['RESIDENCE_NAME'] ?? 'RÉSIDENCE';
+    final syndicName = config['SYNDIC_NAME'] ?? 'M. SYNDIC';
 
     pdf.addPage(
       pw.Page(

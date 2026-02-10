@@ -37,14 +37,14 @@ class _ResidentDashboardScreenState extends State<ResidentDashboardScreen> {
   // HARDCODED RIB (SOURCE OF TRUTH)
   static const String _kStaticRib =
       "1. Pour un virement au Maroc (National)\n"
-      "Bénéficiaire : STE SYNDICAT AMANDIER B\n"
-      "Banque : BANK OF AFRICA (Agence Bachkou)\n"
-      "RIB (24 chiffres) : 011794000051200000374935\n\n"
+      "Bénéficiaire : SYNDICAT EXEMPLE\n"
+      "Banque : BANK NAME\n"
+      "RIB (24 chiffres) : 000000000000000000000000\n\n"
       "2. Pour un virement de l'étranger (International)\n"
-      "Bénéficiaire : STE SYNDICAT AMANDIER B\n"
-      "Banque : BANK OF AFRICA - BMCE GROUP\n"
-      "Code SWIFT / BIC : BMCEMAMC\n"
-      "IBAN (International) : MA64011794000051200000374935";
+      "Bénéficiaire : SYNDICAT EXEMPLE\n"
+      "Banque : BANK NAME\n"
+      "Code SWIFT / BIC : XXXXXXXX\n"
+      "IBAN (International) : MA000000000000000000000000";
 
   @override
   void initState() {
