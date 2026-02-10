@@ -5,7 +5,7 @@ import '../../../core/services/eco_pdf_service.dart';
 import '../../../features/residents/presentation/residents_controller.dart';
 import '../../../features/settings/presentation/settings_controller.dart';
 import '../../../features/transactions/data/transaction_repository.dart';
-import '../../../domain/entities/resident.dart';
+import '../../../data/models/resident.dart';
 
 class AdministrativeHubScreen extends ConsumerWidget {
   const AdministrativeHubScreen({super.key});

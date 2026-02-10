@@ -3,7 +3,7 @@ import 'package:drift/drift.dart';
 import 'dart:async';
 import '../../data/database/database.dart' hide Provider;
 import '../../data/database/database_provider.dart';
-import '../entities/resident.dart' as domain;
+import '../models/resident.dart' as domain;
 
 final residentRepositoryProvider = Provider<ResidentRepository>((ref) {
   final db = ref.watch(appDatabaseProvider);

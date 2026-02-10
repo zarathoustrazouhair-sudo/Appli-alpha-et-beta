@@ -1,0 +1,18 @@
+Manger & Life/lib/features/providers/domain/provider_repository.dart:import '../../../../domain/entities/provider.dart' as entity;
+Manger & Life/lib/features/providers/presentation/providers_controller.dart:import '../../../domain/entities/provider.dart' as entity;
+Manger & Life/lib/features/expenses/domain/expense_repository.dart:import '../../../domain/entities/expense.dart' as entity;
+Manger & Life/lib/features/expenses/presentation/expenses_controller.dart:import '../../../domain/entities/expense.dart';
+Manger & Life/lib/features/expenses/presentation/add_expense_modal.dart:import '../../../domain/entities/provider.dart'
+Manger & Life/lib/features/expenses/presentation/expense_detail_screen.dart:import '../../../domain/entities/expense.dart';
+Manger & Life/lib/features/residents/presentation/bulk_relaunch_screen.dart:import '../../../domain/entities/resident.dart';
+Manger & Life/lib/features/residents/presentation/add_resident_modal.dart:import '../../../domain/entities/resident.dart';
+Manger & Life/lib/features/residents/presentation/resident_detail_screen.dart:import '../../../domain/entities/resident.dart';
+Manger & Life/lib/features/residents/presentation/residents_screen.dart:import '../../../domain/entities/resident.dart';
+Manger & Life/lib/features/residents/presentation/residents_controller.dart:import '../../../../domain/entities/resident.dart';
+Manger & Life/lib/features/residents/presentation/resident_detail_controller.dart:import '../../../../domain/entities/resident.dart';
+Manger & Life/lib/features/legal/presentation/legal_docs_screen.dart:import '../../../domain/entities/resident.dart';
+Manger & Life/lib/features/dashboard/screens/dashboard_screen_optimized.dart:import '../../../../domain/entities/resident.dart'; // Import Resident entity
+Manger & Life/lib/features/dashboard/presentation/dashboard_controller.dart:import '../../../../domain/entities/resident.dart';
+Manger & Life/lib/core/services/pdf_service.dart:import '../../domain/entities/payment.dart';
+Manger & Life/lib/core/services/pdf_service.dart:import '../../domain/entities/resident.dart';
+Manger & Life/lib/core/services/eco_pdf_service.dart:import '../../domain/entities/resident.dart' as domain;

@@ -1,5 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../../../domain/entities/provider.dart' as entity;
+import '../../../data/models/provider.dart' as entity;
 import '../domain/provider_repository.dart';
 
 part 'providers_controller.g.dart';

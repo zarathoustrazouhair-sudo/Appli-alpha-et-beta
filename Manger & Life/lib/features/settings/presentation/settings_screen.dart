@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 import '../presentation/settings_controller.dart';
-import '../../../../domain/repositories/resident_repository.dart';
+import '../../../../data/repositories/resident_repository.dart';
 
 class SettingsFormScreen extends ConsumerStatefulWidget {
   const SettingsFormScreen({super.key});

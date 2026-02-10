@@ -5,7 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../../core/services/image_service.dart';
 import 'expenses_controller.dart';
 import '../../providers/presentation/providers_controller.dart';
-import '../../../domain/entities/provider.dart'
+import '../../../data/models/provider.dart'
     as entity; // Alias to avoid conflict if any
 
 class AddExpenseModal extends ConsumerStatefulWidget {

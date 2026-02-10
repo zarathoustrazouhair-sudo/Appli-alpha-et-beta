@@ -1,6 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../../../../domain/repositories/resident_repository.dart';
-import '../../../../domain/entities/resident.dart';
+import '../../../../data/repositories/resident_repository.dart';
+import '../../../../data/models/resident.dart';
 
 part 'residents_controller.g.dart';
 

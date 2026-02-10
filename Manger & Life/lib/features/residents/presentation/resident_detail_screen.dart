@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:printing/printing.dart';
-import '../../../domain/entities/resident.dart';
+import '../../../data/models/resident.dart';
 import 'resident_detail_controller.dart';
 import 'residents_controller.dart';
 import '../../../../core/services/eco_pdf_service.dart'; // Upgrade to EcoPdfService

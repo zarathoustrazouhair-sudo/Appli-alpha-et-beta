@@ -1,0 +1,8 @@
+Manger & Life/lib/features/residents/presentation/residents_controller.dart:import '../../../../domain/repositories/resident_repository.dart';
+Manger & Life/lib/features/residents/presentation/resident_detail_controller.dart:import '../../../../domain/repositories/resident_repository.dart';
+Manger & Life/lib/features/dashboard/screens/dashboard_screen_optimized.dart:import '../../../../domain/repositories/resident_repository.dart'; // Ensure repository is imported
+Manger & Life/lib/features/dashboard/screens/global_situation_screen.dart:import '../../../../domain/repositories/resident_repository.dart';
+Manger & Life/lib/features/dashboard/presentation/dashboard_controller.dart:import '../../../../domain/repositories/resident_repository.dart';
+Manger & Life/lib/features/dashboard/presentation/global_report_controller.dart:import '../../../../domain/repositories/resident_repository.dart';
+Manger & Life/lib/features/settings/presentation/settings_screen.dart:import '../../../../domain/repositories/resident_repository.dart';
+Manger & Life/lib/features/sync/data/sync_service.dart:import '../../../../domain/repositories/resident_repository.dart';

@@ -1,5 +1,53 @@
-final_migration_fix.py
-build/
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub
 .dart_tool/
+.packages
+.pub/
+build/
+ios/Flutter/App.framework
+ios/Flutter/Flutter.framework
+android/.gradle
+
+# Android
+local.properties
+key.properties
+*.jks
+*.keystore
+
+# iOS
+ios/Pods/
+ios/.symlinks/
+ios/Podfile.lock
+
+# Web
+web/build/
+.last_build_id
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# Custom specific ignores
+LIVRAISON_APKS_FINAUX/
 *.apk
 *.zip
+final_migration_fix.py
