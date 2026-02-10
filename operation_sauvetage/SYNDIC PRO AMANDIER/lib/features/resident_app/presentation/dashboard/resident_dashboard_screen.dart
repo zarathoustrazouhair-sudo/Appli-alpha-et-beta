@@ -111,6 +111,14 @@ class _ResidentDashboardScreenState extends State<ResidentDashboardScreen> {
         'resident_phone': widget.residentPhone,
         'apt_number': widget.aptNumber,
       });
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Alerte envoyée au Syndic"),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
     } catch (e) {
       // Ignore cloud errors in emergency, prioritize WhatsApp
     }
@@ -213,17 +221,29 @@ class _ResidentDashboardScreenState extends State<ResidentDashboardScreen> {
             Row(
               children: [
                 Expanded(
-                  child: ElevatedButton.icon(
-                    icon: const Icon(Icons.sos, color: Colors.white),
-                    label: const Text("SOS / URGENCE"),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red[900],
+                  child: GestureDetector(
+                    onTap: _triggerSOS, // WIRED SOS
+                    child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 20),
-                      shape: RoundedRectangleBorder(
+                      decoration: BoxDecoration(
+                        color: Colors.red[900],
                         borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.red.withOpacity(0.4),
+                            blurRadius: 10,
+                            spreadRadius: 2,
+                          )
+                        ],
+                      ),
+                      child: const Column(
+                        children: [
+                          Icon(Icons.sos, color: Colors.white, size: 32),
+                          SizedBox(height: 8),
+                          Text("SOS / URGENCE", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                        ],
                       ),
                     ),
-                    onPressed: _triggerSOS,
                   ),
                 ),
                 const SizedBox(width: 16),

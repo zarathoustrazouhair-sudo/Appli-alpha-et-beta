@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:intl/intl.dart'; // For DateFormat
+import 'package:printing/printing.dart'; // For printing preview
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/glass_card.dart';
 import '../../transactions/data/transaction_repository.dart';
@@ -12,7 +13,9 @@ import '../../residents/presentation/resident_detail_screen.dart';
 import '../../transactions/presentation/transaction_entry_screen.dart';
 import '../../sync/data/sync_service.dart';
 import '../../dashboard/presentation/global_situation_screen.dart';
-import '../../../data/database/database.dart' as db; // Alias database import to avoid conflict
+import '../../../data/database/database.dart' as db; // Alias database import
+import '../../../core/services/eco_pdf_service.dart';
+import '../../../features/incidents/data/incident_repository.dart';
 
 // PROVIDERS (LOCAL CALCS)
 final treasuryRunwayProvider = Provider.autoDispose<String>((ref) {
@@ -22,6 +25,9 @@ final treasuryRunwayProvider = Provider.autoDispose<String>((ref) {
   final months = (balanceDH / 5000).toStringAsFixed(1);
   return "$months Mois";
 });
+
+// PDF SERVICE PROVIDER (Simple injection)
+final ecoPdfServiceProvider = Provider((ref) => EcoPdfService({}));
 
 class DashboardScreenOptimized extends ConsumerStatefulWidget {
   const DashboardScreenOptimized({super.key});
@@ -58,12 +64,13 @@ class _DashboardScreenOptimizedState
   Widget build(BuildContext context) {
     final balanceAsync = ref.watch(totalClass5Stream);
     final runway = ref.watch(treasuryRunwayProvider);
-    final transactionsAsync = ref.watch(recentTransactionsStream);
+    // Task 3: Listen to Incidents for Alerts
+    final incidentsAsync = ref.watch(incidentRepositoryProvider).watchIncidents();
 
     return Scaffold(
       backgroundColor: AppTheme.scaffoldColor,
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _showActionModal(context),
+        onPressed: () => _showActionModal(context, ref),
         backgroundColor: AppTheme.primaryColor,
         label: const Text(
           "ACTION RAPIDE",
@@ -214,117 +221,63 @@ class _DashboardScreenOptimizedState
             ),
             const SizedBox(height: 24),
 
-            // 2. SMART FEED (Transactions)
-            const _SectionHeader(title: "DERNIÈRES TRANSACTIONS"),
-            const SizedBox(height: 8),
-            transactionsAsync.when(
-              data: (transactions) {
-                if (transactions.isEmpty) {
-                  return GlassCard(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 20),
-                    borderColor: Colors.white10,
-                    child: const Row(
-                      children: [
-                        Icon(Icons.history, color: Colors.white54),
-                        SizedBox(width: 16),
-                        Text(
-                          "AUCUNE TRANSACTION.",
-                          style: TextStyle(
-                              color: Colors.white54,
-                              fontFamily: 'Monospace'),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-                return ListView.separated(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: transactions.take(3).length, // Limit to 3
-                  separatorBuilder: (_, __) => const SizedBox(height: 8),
-                  itemBuilder: (context, index) {
-                    final transaction = transactions[index];
-                    final dateStr = DateFormat('dd/MM HH:mm').format(transaction.date);
-                    final amountStr = (transaction.amountCents / 100).toStringAsFixed(2);
+            // 2. ALERT / SMART FEED HYBRID
+            StreamBuilder(
+              stream: incidentsAsync,
+              builder: (context, snapshot) {
+                final incidents = snapshot.data ?? [];
+                final urgentIncidents = incidents.where((i) => i.isUrgent).toList();
 
-                    return GlassCard(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 12),
-                      borderColor: AppTheme.primaryColor.withOpacity(0.3),
-                      child: Row(
+                if (urgentIncidents.isNotEmpty) {
+                  // ALERT MODE: Show Red Alert Box
+                  return AnimatedBuilder(
+                    animation: _pulseAnimation,
+                    builder: (context, child) {
+                      return Container(
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppTheme.errorColor.withOpacity(
+                                  0.5 * _pulseAnimation.value),
+                              blurRadius: 30 * _pulseAnimation.value,
+                              spreadRadius: 2,
+                            ),
+                          ],
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: child,
+                      );
+                    },
+                    child: GlassCard(
+                      borderColor: AppTheme.errorColor,
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
                         children: [
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: AppTheme.primaryColor.withOpacity(0.1),
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.attach_money,
-                              color: AppTheme.primaryColor,
-                              size: 16,
-                            ),
+                          const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.warning_amber, color: AppTheme.errorColor, size: 32),
+                              SizedBox(width: 12),
+                              Text("ALERTE SOS REÇUE", style: TextStyle(color: AppTheme.errorColor, fontWeight: FontWeight.bold, fontSize: 18, letterSpacing: 1.2)),
+                            ],
                           ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  transaction.description.toUpperCase(),
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                Text(
-                                  dateStr,
-                                  style: const TextStyle(
-                                    color: Colors.white54,
-                                    fontSize: 10,
-                                  ),
-                                ),
-                              ],
+                          const SizedBox(height: 8),
+                          ...urgentIncidents.map((incident) => Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Text(
+                              "${incident.title} - ${incident.residentPhone}",
+                              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                             ),
-                          ),
-                          Text(
-                            "$amountStr DH",
-                            style: const TextStyle(
-                              color: AppTheme.primaryColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                              fontFamily: 'Monospace',
-                            ),
-                          ),
+                          )),
                         ],
                       ),
-                    );
-                  },
-                );
-              },
-              loading: () => const LinearProgressIndicator(
-                  color: AppTheme.primaryColor, backgroundColor: Colors.black),
-              error: (_, __) => GlassCard(
-                borderColor: AppTheme.errorColor,
-                child: const Row(
-                  children: [
-                    Icon(Icons.shield, color: AppTheme.errorColor), // Shield Icon
-                    SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        "MODE HORS-LIGNE SÉCURISÉ",
-                        style: TextStyle(
-                            color: AppTheme.errorColor,
-                            fontFamily: 'Monospace',
-                            fontWeight: FontWeight.bold),
-                      ),
                     ),
-                  ],
-                ),
-              ),
+                  );
+                } else {
+                  // NORMAL MODE: Show Transaction Feed
+                  return _SmartTransactionFeed();
+                }
+              },
             ),
             const SizedBox(height: 24),
 
@@ -389,7 +342,7 @@ class _DashboardScreenOptimizedState
     );
   }
 
-  void _showActionModal(BuildContext context) {
+  void _showActionModal(BuildContext context, WidgetRef ref) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -421,6 +374,37 @@ class _DashboardScreenOptimizedState
               },
             ),
             const Divider(color: Colors.white12),
+            // TASK 1: WIRE PDF (TEST BUTTON)
+            ListTile(
+              leading: const Icon(Icons.picture_as_pdf,
+                  color: AppTheme.secondaryColor, size: 32),
+              title: const Text("TEST PDF ENGINE",
+                  style: TextStyle(color: Colors.white)),
+              subtitle: const Text("Générer un reçu de test",
+                  style: TextStyle(color: Colors.white54)),
+              onTap: () async {
+                Navigator.pop(context);
+                // 1. Create a Mock Transaction
+                final mockTransaction = db.Transaction(
+                  id: 999,
+                  debitAccountId: 1,
+                  creditAccountId: 2,
+                  amountCents: 150000,
+                  date: DateTime.now(),
+                  description: "COTISATION TEST (MOCK)",
+                );
+                // 2. Generate PDF
+                final pdfService = ref.read(ecoPdfServiceProvider);
+                // Need resident name for receipt, mocking it too
+                final file = await pdfService.generateReceipt(mockTransaction, "TEST RESIDENT");
+                // 3. Preview
+                await Printing.layoutPdf(
+                  onLayout: (_) => file.readAsBytes(),
+                  name: 'Test Receipt',
+                );
+              },
+            ),
+            const Divider(color: Colors.white12),
             ListTile(
               leading: const Icon(Icons.print,
                   color: Colors.white, size: 32),
@@ -439,6 +423,95 @@ class _DashboardScreenOptimizedState
           ],
         ),
       ),
+    );
+  }
+}
+
+class _SmartTransactionFeed extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final transactionsAsync = ref.watch(recentTransactionsStream);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const _SectionHeader(title: "DERNIÈRES TRANSACTIONS"),
+        const SizedBox(height: 8),
+        transactionsAsync.when(
+          data: (transactions) {
+            if (transactions.isEmpty) {
+              return GlassCard(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                borderColor: Colors.white10,
+                child: const Row(
+                  children: [
+                    Icon(Icons.history, color: Colors.white54),
+                    SizedBox(width: 16),
+                    Text("AUCUNE TRANSACTION.", style: TextStyle(color: Colors.white54, fontFamily: 'Monospace')),
+                  ],
+                ),
+              );
+            }
+            return ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: transactions.take(3).length,
+              separatorBuilder: (_, __) => const SizedBox(height: 8),
+              itemBuilder: (context, index) {
+                final transaction = transactions[index];
+                final dateStr = DateFormat('dd/MM HH:mm').format(transaction.date);
+                final amountStr = (transaction.amountCents / 100).toStringAsFixed(2);
+
+                return GlassCard(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                  borderColor: AppTheme.primaryColor.withOpacity(0.3),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: AppTheme.primaryColor.withOpacity(0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(Icons.attach_money, color: AppTheme.primaryColor, size: 16),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              transaction.description.toUpperCase(),
+                              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(dateStr, style: const TextStyle(color: Colors.white54, fontSize: 10)),
+                          ],
+                        ),
+                      ),
+                      Text(
+                        "$amountStr DH",
+                        style: const TextStyle(color: AppTheme.primaryColor, fontWeight: FontWeight.bold, fontSize: 14, fontFamily: 'Monospace'),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            );
+          },
+          loading: () => const LinearProgressIndicator(color: AppTheme.primaryColor, backgroundColor: Colors.black),
+          error: (_, __) => GlassCard(
+            borderColor: AppTheme.errorColor,
+            child: const Row(
+              children: [
+                Icon(Icons.shield, color: AppTheme.errorColor),
+                SizedBox(width: 12),
+                Expanded(child: Text("MODE HORS-LIGNE SÉCURISÉ", style: TextStyle(color: AppTheme.errorColor, fontFamily: 'Monospace', fontWeight: FontWeight.bold))),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
