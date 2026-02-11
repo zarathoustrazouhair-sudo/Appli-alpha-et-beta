@@ -63,6 +63,41 @@ class ResidentRepository {
     });
   }
 
+  Future<Map<int, double>> getAllResidentBalances({
+    List<domain.Resident>? residents,
+  }) async {
+    final list = residents ?? await getResidents();
+
+    final query = _db.selectOnly(_db.payments)
+      ..addColumns([_db.payments.residentId, _db.payments.amount.sum()])
+      ..groupBy([_db.payments.residentId]);
+
+    final rows = await query.get();
+    final Map<int, double> totalPaidMap = {
+      for (var row in rows)
+        row.read(_db.payments.residentId)!:
+            row.read(_db.payments.amount.sum()) ?? 0.0
+    };
+
+    final now = DateTime.now();
+    final Map<int, double> balances = {};
+
+    for (var r in list) {
+      final totalPaid = totalPaidMap[r.id] ?? 0.0;
+      final start = r.startDate;
+      int months = 0;
+      if (now.isAfter(start)) {
+        months = (now.year - start.year) * 12 + now.month - start.month + 1;
+      }
+      if (months < 0) months = 0;
+
+      final totalDue = months * r.monthlyFee;
+      balances[r.id] = totalPaid - totalDue;
+    }
+
+    return balances;
+  }
+
   Future<void> addResident(
     String name,
     String building,

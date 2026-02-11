@@ -26,18 +26,14 @@ Future<Map<int, Map<int, bool>>> paymentMatrix(Ref ref) async {
   )..where((t) => t.date.isBetweenValues(startOfYear, endOfYear))).get();
 
   final residents = await ref.read(residentRepositoryProvider).getResidents();
+  final allBalances = await ref
+      .read(residentRepositoryProvider)
+      .getAllResidentBalances(residents: residents);
   final Map<int, Map<int, bool>> matrix = {};
 
   for (var r in residents) {
-    // Get payments for this resident
-    final rPayments = payments.where((p) => p.residentId == r.id).toList();
-    // final totalPaid = rPayments.fold(0.0, (sum, p) => sum + p.amount); // Unused
-
     // Calculate how many months covered from start of year
-    final balance = await ref
-        .read(residentRepositoryProvider)
-        .getResidentBalance(r)
-        .first;
+    final balance = allBalances[r.id] ?? 0.0;
 
     final monthsCovered = (balance / r.monthlyFee).floor();
     final now = DateTime.now();
