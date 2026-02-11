@@ -266,7 +266,7 @@ class AppDatabase extends _$AppDatabase {
               id: const Value(1),
               floor: const Value(1),
               apartment: const Value('1'),
-              name: 'AYAZI ADNAN',
+              name: 'Copropriétaire 1',
               phone: const Value(''),
               pinCode: const Value('0000'),
             ),
@@ -274,7 +274,7 @@ class AppDatabase extends _$AppDatabase {
               id: const Value(2),
               floor: const Value(1),
               apartment: const Value('2'),
-              name: 'DEHBI FATIMA',
+              name: 'Copropriétaire 2',
               phone: const Value(''),
               pinCode: const Value('0000'),
             ),
@@ -282,7 +282,7 @@ class AppDatabase extends _$AppDatabase {
               id: const Value(3),
               floor: const Value(1),
               apartment: const Value('3'),
-              name: 'MOUKTADI NORA',
+              name: 'Copropriétaire 3',
               phone: const Value(''),
               pinCode: const Value('0000'),
             ),
@@ -290,7 +290,7 @@ class AppDatabase extends _$AppDatabase {
               id: const Value(4),
               floor: const Value(1),
               apartment: const Value('4'),
-              name: 'JALILA ANNAN',
+              name: 'Copropriétaire 4',
               phone: const Value(''),
               pinCode: const Value('0000'),
             ),
@@ -298,7 +298,7 @@ class AppDatabase extends _$AppDatabase {
               id: const Value(5),
               floor: const Value(1),
               apartment: const Value('5'),
-              name: 'YAHYA SBAI',
+              name: 'Copropriétaire 5',
               phone: const Value(''),
               pinCode: const Value('0000'),
             ),
@@ -306,7 +306,7 @@ class AppDatabase extends _$AppDatabase {
               id: const Value(6),
               floor: const Value(2),
               apartment: const Value('6'),
-              name: 'BOUKHERSSA YASMINE',
+              name: 'Copropriétaire 6',
               phone: const Value(''),
               pinCode: const Value('0000'),
             ),
@@ -314,7 +314,7 @@ class AppDatabase extends _$AppDatabase {
               id: const Value(7),
               floor: const Value(2),
               apartment: const Value('7'),
-              name: 'LIASSINI JALAL EDDINE',
+              name: 'Copropriétaire 7',
               phone: const Value(''),
               pinCode: const Value('0000'),
             ),
@@ -322,7 +322,7 @@ class AppDatabase extends _$AppDatabase {
               id: const Value(8),
               floor: const Value(2),
               apartment: const Value('8'),
-              name: 'KENBOUCHI ABDELATI',
+              name: 'Copropriétaire 8',
               phone: const Value(''),
               pinCode: const Value('0000'),
             ),
@@ -330,7 +330,7 @@ class AppDatabase extends _$AppDatabase {
               id: const Value(9),
               floor: const Value(2),
               apartment: const Value('9'),
-              name: 'MARWA SBAILI',
+              name: 'Copropriétaire 9',
               phone: const Value(''),
               pinCode: const Value('0000'),
             ),
@@ -338,7 +338,7 @@ class AppDatabase extends _$AppDatabase {
               id: const Value(10),
               floor: const Value(2),
               apartment: const Value('10'),
-              name: 'HALIL BESSAM',
+              name: 'Copropriétaire 10',
               phone: const Value(''),
               pinCode: const Value('0000'),
             ),
@@ -346,7 +346,7 @@ class AppDatabase extends _$AppDatabase {
               id: const Value(11),
               floor: const Value(3),
               apartment: const Value('11'),
-              name: 'RAHIL ADIL',
+              name: 'Copropriétaire 11',
               phone: const Value(''),
               pinCode: const Value('0000'),
             ),
@@ -354,7 +354,7 @@ class AppDatabase extends _$AppDatabase {
               id: const Value(12),
               floor: const Value(3),
               apartment: const Value('12'),
-              name: 'ARIF MOHSINE',
+              name: 'Copropriétaire 12',
               phone: const Value(''),
               pinCode: const Value('0000'),
             ),
@@ -362,7 +362,7 @@ class AppDatabase extends _$AppDatabase {
               id: const Value(13),
               floor: const Value(3),
               apartment: const Value('13'),
-              name: 'OUALAD ASMAA',
+              name: 'Copropriétaire 13',
               phone: const Value(''),
               pinCode: const Value('0000'),
             ),
@@ -370,7 +370,7 @@ class AppDatabase extends _$AppDatabase {
               id: const Value(14),
               floor: const Value(3),
               apartment: const Value('14'),
-              name: 'FIDAR NAOUAL',
+              name: 'Copropriétaire 14',
               phone: const Value(''),
               pinCode: const Value('0000'),
             ),
@@ -378,7 +378,7 @@ class AppDatabase extends _$AppDatabase {
               id: const Value(15),
               floor: const Value(3),
               apartment: const Value('15'),
-              name: 'ESSAIDI KAWTAR',
+              name: 'Copropriétaire 15',
               phone: const Value(''),
               pinCode: const Value('0000'),
             ),
@@ -388,14 +388,14 @@ class AppDatabase extends _$AppDatabase {
 
       const ribText =
           "1. Pour un virement au Maroc (National)\n"
-          "Bénéficiaire : STE SYNDICAT AMANDIER B\n"
-          "Banque : BANK OF AFRICA (Agence Bachkou)\n"
-          "RIB (24 chiffres) : 011794000051200000374935\n\n"
+          "Bénéficiaire : [NOM DU SYNDICAT]\n"
+          "Banque : [NOM DE LA BANQUE]\n"
+          "RIB (24 chiffres) : 000000000000000000000000\n\n"
           "2. Pour un virement de l'étranger (International)\n"
-          "Bénéficiaire : STE SYNDICAT AMANDIER B\n"
-          "Banque : BANK OF AFRICA - BMCE GROUP\n"
-          "Code SWIFT / BIC : BMCEMAMC\n"
-          "IBAN (International) : MA64011794000051200000374935";
+          "Bénéficiaire : [NOM DU SYNDICAT]\n"
+          "Banque : [NOM DE LA BANQUE]\n"
+          "Code SWIFT / BIC : [SWIFT]\n"
+          "IBAN (International) : MA64000000000000000000000000";
 
       await into(appConfigs).insertOnConflictUpdate(
         AppConfigsCompanion.insert(key: 'RIB', value: ribText),

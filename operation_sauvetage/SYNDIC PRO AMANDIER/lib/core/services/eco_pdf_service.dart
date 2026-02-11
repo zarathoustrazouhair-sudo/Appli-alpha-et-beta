@@ -792,6 +792,7 @@ class EcoPdfService {
   ) async {
     final pdf = pw.Document();
     final logo = await _loadLogo();
+    final city = config['CITY'] ?? 'Ville';
     final dateStr = "${date.day}/${date.month}/${date.year}";
 
     pdf.addPage(
@@ -856,7 +857,7 @@ class EcoPdfService {
             ),
 
             pw.SizedBox(height: 30),
-            pw.Text("Fait à Bouskoura, le $dateStr.", style: _getSerifStyle()),
+            pw.Text("Fait à $city, le $dateStr.", style: _getSerifStyle()),
 
             pw.Spacer(),
             pw.Align(
