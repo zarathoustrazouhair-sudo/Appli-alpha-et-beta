@@ -1,6 +1,23 @@
 import 'package:pdf/pdf.dart';
 
 class Formatters {
+  static String formatWhatsAppNumber(String phone) {
+    // 1. Remove all non-digit characters
+    var number = phone.replaceAll(RegExp(r'\D'), '');
+
+    // 2. Remove leading '0' if present (e.g., 06 -> 6)
+    if (number.startsWith('0')) {
+      number = number.substring(1);
+    }
+
+    // 3. Ensure it starts with '212' (Morocco country code)
+    if (!number.startsWith('212')) {
+      number = '212$number';
+    }
+
+    return number;
+  }
+
   static String formatMoney(double amount) {
     return '${amount.toStringAsFixed(2)} DH';
   }
@@ -90,14 +107,15 @@ class Formatters {
       String tenStr = '';
       if (ten == 2) {
         tenStr = 'Vingt';
-      } else if (ten == 3)
+      } else if (ten == 3) {
         tenStr = 'Trente';
-      else if (ten == 4)
+      } else if (ten == 4) {
         tenStr = 'Quarante';
-      else if (ten == 5)
+      } else if (ten == 5) {
         tenStr = 'Cinquante';
-      else if (ten == 6)
+      } else if (ten == 6) {
         tenStr = 'Soixante';
+      }
 
       return '$tenStr-${_units[unit]}';
     }

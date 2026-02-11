@@ -1,22 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../../core/utils/formatters.dart';
 import '../../../domain/entities/resident.dart';
 import 'residents_controller.dart';
 // For residentBalanceProvider
-
-part 'bulk_relaunch_screen.g.dart';
-
-@riverpod
-class BulkSelection extends _$BulkSelection {
-  @override
-  Map<int, bool> build() => {};
-
-  void toggle(int id) {
-    state = {...state, id: !(state[id] ?? false)};
-  }
-}
 
 class BulkRelaunchScreen extends ConsumerWidget {
   const BulkRelaunchScreen({super.key});
@@ -35,8 +23,9 @@ class BulkRelaunchScreen extends ConsumerWidget {
       appBar: AppBar(title: const Text('Mode Rafale (Dettes)')),
       body: residentsAsync.when(
         data: (residents) {
-          if (residents.isEmpty)
+          if (residents.isEmpty) {
             return const Center(child: Text('Aucun résident.'));
+          }
 
           return ListView.builder(
             itemCount: residents.length,
@@ -47,11 +36,12 @@ class BulkRelaunchScreen extends ConsumerWidget {
 
               return balanceAsync.when(
                 data: (balance) {
-                  if (balance >= 0)
+                  if (balance >= 0) {
                     return const SizedBox.shrink(); // Hide positives
+                  }
 
                   return Card(
-                    color: Colors.red.withOpacity(0.1),
+                    color: Colors.red.withValues(alpha: 0.1),
                     margin: const EdgeInsets.symmetric(
                       horizontal: 16,
                       vertical: 4,
@@ -86,9 +76,7 @@ class BulkRelaunchScreen extends ConsumerWidget {
   Future<void> _sendWhatsApp(Resident resident, double balance) async {
     if (resident.phone.isEmpty) return;
 
-    var number = resident.phone.replaceAll(' ', '').replaceAll('-', '');
-    if (number.startsWith('0')) number = number.substring(1);
-    if (!number.startsWith('212')) number = '212$number';
+    final number = Formatters.formatWhatsAppNumber(resident.phone);
 
     final message =
         "Bonjour M/Mme ${resident.name}, sauf erreur, votre solde est débiteur de ${(-balance).toStringAsFixed(2)} DH. Merci de régulariser pour le bon fonctionnement de la résidence.";
