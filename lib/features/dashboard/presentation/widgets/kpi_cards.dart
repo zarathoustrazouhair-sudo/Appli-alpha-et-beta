@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:residence_lamandier_b/core/theme/luxury_theme.dart';
 import 'package:residence_lamandier_b/core/theme/widgets/luxury_card.dart';
+import 'package:residence_lamandier_b/core/theme/widgets/financial_mood_icon.dart';
 
 class KpiCards extends StatelessWidget {
   const KpiCards({super.key});
@@ -59,7 +60,7 @@ class KpiCards extends StatelessWidget {
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    Icon(Icons.shield_moon, color: AppTheme.gold, size: 20),
+                    const FinancialMoodIcon(monthsOfSurvival: 4.5, size: 24),
                     const SizedBox(width: 8),
                     Text(
                       "4.5 MOIS",
