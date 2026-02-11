@@ -11,10 +11,10 @@ class RecoveryDisk extends StatelessWidget {
     return LuxuryCard(
       padding: const EdgeInsets.all(16),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            "TAUX DE RECOUVREMENT",
+            "RECOUVREMENT",
             style: TextStyle(
               color: AppTheme.offWhite.withOpacity(0.6),
               fontSize: 10,
@@ -22,77 +22,45 @@ class RecoveryDisk extends StatelessWidget {
               letterSpacing: 1.2,
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 12),
           SizedBox(
-            height: 200,
+            height: 100,
             child: Stack(
               children: [
                 PieChart(
                   PieChartData(
                     sectionsSpace: 4,
-                    centerSpaceRadius: 60,
+                    centerSpaceRadius: 35,
                     startDegreeOffset: 270,
                     sections: [
                       PieChartSectionData(
                         color: const Color(0xFF00E5FF),
                         value: 75,
                         title: '',
-                        radius: 20,
-                        titleStyle: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.offWhite,
-                        ),
+                        radius: 12,
                       ),
                       PieChartSectionData(
                         color: const Color(0xFFFF0040),
                         value: 25,
                         title: '',
-                        radius: 15,
-                        titleStyle: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.offWhite,
-                        ),
+                        radius: 10,
                       ),
                     ],
                   ),
                 ),
                 Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "75%",
-                        style: TextStyle(
-                          color: AppTheme.offWhite,
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Playfair Display',
-                        ),
-                      ),
-                      Text(
-                        "PAYÉ",
-                        style: TextStyle(
-                          color: AppTheme.offWhite.withOpacity(0.6),
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
+                  child: Text(
+                    "75%",
+                    style: TextStyle(
+                      color: AppTheme.offWhite,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Playfair Display',
+                    ),
                   ),
                 ),
               ],
             ),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _buildLegendItem(const Color(0xFF00E5FF), "Payé"),
-              const SizedBox(width: 24),
-              _buildLegendItem(const Color(0xFFFF0040), "Impayé"),
-            ],
           ),
         ],
       ),

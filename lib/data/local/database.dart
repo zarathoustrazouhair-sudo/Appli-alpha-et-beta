@@ -5,10 +5,11 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:residence_lamandier_b/core/sync/mutation_queue_entity.dart';
+import 'package:residence_lamandier_b/features/tasks/data/task_entity.dart';
 
 part 'database.g.dart';
 
-@DriftDatabase(tables: [MutationQueue])
+@DriftDatabase(tables: [MutationQueue, Tasks])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 

@@ -5,28 +5,29 @@ import 'package:residence_lamandier_b/features/dashboard/presentation/widgets/ap
 import 'package:residence_lamandier_b/features/dashboard/presentation/widgets/charts/cashflow_curve.dart';
 import 'package:residence_lamandier_b/features/dashboard/presentation/widgets/charts/recovery_disk.dart';
 import 'package:residence_lamandier_b/features/dashboard/presentation/widgets/kpi_cards.dart';
+import 'package:residence_lamandier_b/features/dashboard/presentation/widgets/reminder_row.dart';
+import 'package:residence_lamandier_b/core/security/role_guards.dart';
+import 'package:residence_lamandier_b/core/router/app_router.dart';
 
 class CockpitScreen extends ConsumerWidget {
   const CockpitScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final userRole = ref.watch(userRoleProvider);
+    final canEditFinance = RoleGuards.canEditFinance(userRole);
+
     return Scaffold(
       backgroundColor: AppTheme.darkNavy,
-      appBar: AppBar(
-        title: Text(
-          'COCKPIT',
-          style: AppTheme.luxuryTheme.textTheme.headlineMedium?.copyWith(
-            color: AppTheme.gold,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 1.5,
-          ),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-      ),
+      floatingActionButton: canEditFinance
+          ? FloatingActionButton(
+              onPressed: () {
+                // Add Finance Transaction
+              },
+              backgroundColor: AppTheme.gold,
+              child: const Icon(Icons.add, color: AppTheme.darkNavy),
+            )
+          : null,
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         child: Column(
@@ -34,9 +35,13 @@ class CockpitScreen extends ConsumerWidget {
           children: [
             // 1. KPI Cards
             const KpiCards(),
+            const SizedBox(height: 16),
+
+            // 2. Reminder Row (New)
+            const ReminderRow(),
             const SizedBox(height: 24),
 
-            // 2. Matrix
+            // 3. Matrix
             Text(
               "STATUS RÉSIDENTS",
               style: AppTheme.luxuryTheme.textTheme.titleMedium?.copyWith(
@@ -49,7 +54,7 @@ class CockpitScreen extends ConsumerWidget {
             const ApartmentGrid(),
             const SizedBox(height: 24),
 
-            // 3. Charts
+            // 4. Charts
              Text(
               "ANALYSE FINANCIÈRE",
               style: AppTheme.luxuryTheme.textTheme.titleMedium?.copyWith(
@@ -59,9 +64,14 @@ class CockpitScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 12),
-            const RecoveryDisk(),
-            const SizedBox(height: 16),
-            const CashflowCurve(),
+            const Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(child: RecoveryDisk()),
+                SizedBox(width: 8),
+                Expanded(child: CashflowCurve()),
+              ],
+            ),
             const SizedBox(height: 32),
           ],
         ),
