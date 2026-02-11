@@ -47,7 +47,7 @@ class _SettingsFormScreenState extends ConsumerState<SettingsFormScreen> {
   }
 
   Future<void> _loadData() async {
-    await ref.read(settingsControllerProvider.future);
+    final config = await ref.read(settingsControllerProvider.future);
     setState(() {
       _logoPath = config['LOGO_PATH'];
       _syndicNameCtrl.text = config['SYNDIC_NAME'] ?? '';
