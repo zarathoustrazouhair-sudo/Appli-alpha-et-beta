@@ -1,20 +1,10 @@
 import 'package:url_launcher/url_launcher.dart';
+import '../utils/formatters.dart';
 
 class WhatsappService {
   Future<void> sendRelance(String phone, int balance) async {
-    // Sanitize phone: remove spaces, ensure it starts with appropriate code if needed.
-    // For this context, assuming +212 is standard but users might enter 06...
-    var sanitizedPhone = phone.replaceAll(' ', '').replaceAll('-', '');
-
-    // Auto-replace leading 0 with 212 (Morocco specific context usually implied by 'DH' currency)
-    if (sanitizedPhone.startsWith('0')) {
-      sanitizedPhone = '212${sanitizedPhone.substring(1)}';
-    }
-
-    // Fallback if no country code (simplified logic)
-    if (!sanitizedPhone.startsWith('+') && !sanitizedPhone.startsWith('212')) {
-      sanitizedPhone = '212$sanitizedPhone';
-    }
+    // Sanitize phone using centralized utility
+    final sanitizedPhone = Formatters.formatWhatsAppNumber(phone);
 
     final message =
         "Bonjour, sauf erreur de notre part, vous avez un solde impayé de $balance DH concernant vos frais de syndic. Merci de régulariser la situation.";

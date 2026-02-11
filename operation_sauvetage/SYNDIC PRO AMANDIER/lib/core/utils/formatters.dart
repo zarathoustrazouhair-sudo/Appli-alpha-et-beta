@@ -15,6 +15,44 @@ class Formatters {
     return PdfColors.white;
   }
 
+  static String formatWhatsAppNumber(String phone) {
+    if (phone.isEmpty) return '';
+
+    // Remove all non-numeric characters
+    var number = phone.replaceAll(RegExp(r'\D'), '');
+
+    // Case 1: Already has 212 and seems complete (12 digits: 212 + 9 digits)
+    if (number.startsWith('212') && number.length == 12) {
+      return number;
+    }
+
+    // Case 2: Local format starting with 0 (e.g. 0612345678 -> 10 digits)
+    if (number.startsWith('0') && number.length == 10) {
+      return '212${number.substring(1)}';
+    }
+
+    // Case 3: 9 digits starting with 5, 6, or 7 (Moroccan local without 0)
+    if (number.length == 9 &&
+        (number.startsWith('5') ||
+            number.startsWith('6') ||
+            number.startsWith('7'))) {
+      return '212$number';
+    }
+
+    // Case 4: If it's already an international number (not starting with 0, length > 10)
+    // We just return it as is (after sanitization)
+    if (number.length > 10) {
+      return number;
+    }
+
+    // Fallback: if it's 9 digits and doesn't match above, we still assume Moroccan for this context
+    if (number.length == 9) {
+      return '212$number';
+    }
+
+    return number;
+  }
+
   static String amountToWords(double amount) {
     int n = amount.floor();
     if (n == 0) return 'Zéro';

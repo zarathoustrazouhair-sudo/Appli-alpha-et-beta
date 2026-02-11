@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../../core/utils/formatters.dart';
 import '../../../domain/entities/resident.dart';
 import 'residents_controller.dart';
 // For residentBalanceProvider
@@ -86,9 +87,7 @@ class BulkRelaunchScreen extends ConsumerWidget {
   Future<void> _sendWhatsApp(Resident resident, double balance) async {
     if (resident.phone.isEmpty) return;
 
-    var number = resident.phone.replaceAll(' ', '').replaceAll('-', '');
-    if (number.startsWith('0')) number = number.substring(1);
-    if (!number.startsWith('212')) number = '212$number';
+    final number = Formatters.formatWhatsAppNumber(resident.phone);
 
     final message =
         "Bonjour M/Mme ${resident.name}, sauf erreur, votre solde est débiteur de ${(-balance).toStringAsFixed(2)} DH. Merci de régulariser pour le bon fonctionnement de la résidence.";

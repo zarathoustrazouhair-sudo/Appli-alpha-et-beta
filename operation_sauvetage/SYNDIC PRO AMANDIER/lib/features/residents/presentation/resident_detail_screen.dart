@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:printing/printing.dart';
+import '../../../core/utils/formatters.dart';
 import '../../../domain/entities/resident.dart';
 import 'resident_detail_controller.dart';
 import 'residents_controller.dart';
@@ -173,9 +174,7 @@ class _WhatsAppButton extends ConsumerWidget {
           return;
         }
 
-        var number = resident.phone.replaceAll(' ', '').replaceAll('-', '');
-        if (number.startsWith('0')) number = number.substring(1);
-        if (!number.startsWith('212')) number = '212$number';
+        final number = Formatters.formatWhatsAppNumber(resident.phone);
 
         final balance = balanceAsync.value ?? 0.0;
         String message;

@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../../core/utils/formatters.dart';
 import '../../../../domain/repositories/resident_repository.dart';
 
 part 'sync_service.g.dart';
@@ -29,9 +30,7 @@ class SyncService {
       final balance = await _residentRepo.getResidentBalance(resident).first;
 
       // Clean phone number for consistency
-      var number = resident.phone.replaceAll(' ', '').replaceAll('-', '');
-      if (number.startsWith('0')) number = number.substring(1);
-      if (!number.startsWith('212')) number = '212$number';
+      final number = Formatters.formatWhatsAppNumber(resident.phone);
 
       // Upsert to Supabase
       // Table: resident_status (phone (PK), balance, last_updated, apt_number, floor_number, pin_code, resident_name)
