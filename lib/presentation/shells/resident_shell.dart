@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:residence_lamandier_b/core/design/app_theme.dart';
-import 'package:residence_lamandier_b/core/design/widgets/luxury_button.dart';
-import 'package:residence_lamandier_b/core/design/widgets/luxury_card.dart';
+import 'package:residence_lamandier_b/core/theme/luxury_theme.dart';
+import 'package:residence_lamandier_b/core/theme/widgets/luxury_button.dart';
+import 'package:residence_lamandier_b/core/theme/widgets/luxury_card.dart';
 import 'package:residence_lamandier_b/features/blog/presentation/blog_feed_screen.dart';
 
 class ResidentShell extends ConsumerStatefulWidget {

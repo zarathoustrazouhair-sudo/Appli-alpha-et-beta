@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:residence_lamandier_b/core/design/app_theme.dart';
+import 'package:residence_lamandier_b/core/theme/luxury_theme.dart';
 import 'package:residence_lamandier_b/core/router/app_router.dart';
 
 void main() {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:residence_lamandier_b/core/design/app_theme.dart';
+import 'package:residence_lamandier_b/core/theme/luxury_theme.dart';
 import 'package:residence_lamandier_b/features/dashboard/presentation/cockpit_screen.dart';
 import 'package:residence_lamandier_b/features/blog/presentation/blog_feed_screen.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:residence_lamandier_b/core/design/app_theme.dart';
-import 'package:residence_lamandier_b/core/design/widgets/luxury_card.dart';
+import 'package:residence_lamandier_b/core/theme/luxury_theme.dart';
+import 'package:residence_lamandier_b/core/theme/widgets/luxury_card.dart';
 
 class KpiCards extends StatelessWidget {
   const KpiCards({super.key});
