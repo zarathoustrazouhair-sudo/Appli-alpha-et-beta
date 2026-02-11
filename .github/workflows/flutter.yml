@@ -1,0 +1,27 @@
+name: build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dart-lang/setup-dart@v1
+
+      - name: Install dependencies
+        working-directory: "operation_sauvetage/SYNDIC PRO AMANDIER"
+        run: flutter pub get
+
+      - name: Analyze
+        working-directory: "operation_sauvetage/SYNDIC PRO AMANDIER"
+        run: flutter analyze
+
+      - name: Run tests
+        working-directory: "operation_sauvetage/SYNDIC PRO AMANDIER"
+        run: flutter test
