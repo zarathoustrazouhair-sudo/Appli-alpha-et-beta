@@ -1,0 +1,194 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:residence_lamandier_b/core/design/app_theme.dart';
+import 'package:residence_lamandier_b/core/design/widgets/luxury_button.dart';
+import 'package:residence_lamandier_b/core/design/widgets/luxury_card.dart';
+import 'package:residence_lamandier_b/core/design/widgets/luxury_text_field.dart';
+import 'package:residence_lamandier_b/features/onboarding/presentation/wizard_intent.dart';
+import 'package:residence_lamandier_b/features/onboarding/presentation/wizard_viewmodel.dart';
+import 'package:residence_lamandier_b/features/onboarding/presentation/wizard_state.dart';
+
+class WizardScreen extends ConsumerStatefulWidget {
+  const WizardScreen({super.key});
+
+  @override
+  ConsumerState<WizardScreen> createState() => _WizardScreenState();
+}
+
+class _WizardScreenState extends ConsumerState<WizardScreen> {
+  late final TextEditingController _syndicController;
+  late final TextEditingController _adjointController;
+  late final TextEditingController _conciergeController;
+
+  @override
+  void initState() {
+    super.initState();
+    _syndicController = TextEditingController();
+    _adjointController = TextEditingController();
+    _conciergeController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _syndicController.dispose();
+    _adjointController.dispose();
+    _conciergeController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final state = ref.watch(wizardViewModelProvider);
+    final viewModel = ref.read(wizardViewModelProvider.notifier);
+
+    // Ensure controllers are in sync with state when navigating back/forth
+    if (_syndicController.text != state.syndicName) {
+      _syndicController.text = state.syndicName;
+    }
+    if (_adjointController.text != state.adjointName) {
+      _adjointController.text = state.adjointName;
+    }
+    if (_conciergeController.text != state.conciergeName) {
+      _conciergeController.text = state.conciergeName;
+    }
+
+    return Scaffold(
+      backgroundColor: AppTheme.darkNavy,
+      appBar: AppBar(
+        title: Text(
+          'INITIAL SETUP',
+          style: AppTheme.luxuryTheme.textTheme.headlineMedium,
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: true,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          children: [
+            // Progress Indicator
+            Semantics(
+              label: 'Step ${state.currentStep + 1} of 3',
+              child: LinearProgressIndicator(
+                value: (state.currentStep + 1) / 3,
+                backgroundColor: AppTheme.gold.withOpacity(0.2),
+                valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.gold),
+              ),
+            ),
+            const SizedBox(height: 32),
+            Expanded(
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 500),
+                child: _buildStep(state, viewModel),
+              ),
+            ),
+            const SizedBox(height: 24),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                if (state.currentStep > 0)
+                  LuxuryButton(
+                    label: 'BACK',
+                    onPressed: () => viewModel.processIntent(const WizardIntent.previousStep()),
+                  )
+                else
+                  const SizedBox.shrink(),
+                LuxuryButton(
+                  label: state.currentStep == 2 ? 'FINISH' : 'NEXT',
+                  isLoading: state.isLoading,
+                  onPressed: () {
+                    if (state.currentStep == 2) {
+                      viewModel.processIntent(const WizardIntent.submit());
+                    } else {
+                      viewModel.processIntent(const WizardIntent.nextStep());
+                    }
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStep(WizardState state, WizardViewModel viewModel) {
+    switch (state.currentStep) {
+      case 0:
+        return LuxuryCard(
+          key: const ValueKey('step0'),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'SYNDIC INFORMATION',
+                style: AppTheme.luxuryTheme.textTheme.displaySmall,
+              ),
+              const SizedBox(height: 24),
+              LuxuryTextField(
+                label: 'FULL NAME',
+                hint: 'Enter Syndic Name',
+                controller: _syndicController,
+                onChanged: (val) => viewModel.processIntent(WizardIntent.updateSyndicName(val)),
+                autofocus: true,
+                textInputAction: TextInputAction.next,
+                onFieldSubmitted: (_) => viewModel.processIntent(const WizardIntent.nextStep()),
+              ),
+            ],
+          ),
+        );
+      case 1:
+        return LuxuryCard(
+          key: const ValueKey('step1'),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'ADJOINT INFORMATION',
+                style: AppTheme.luxuryTheme.textTheme.displaySmall,
+              ),
+              const SizedBox(height: 24),
+              LuxuryTextField(
+                label: 'FULL NAME',
+                hint: 'Enter Adjoint Name',
+                controller: _adjointController,
+                onChanged: (val) => viewModel.processIntent(WizardIntent.updateAdjointName(val)),
+                autofocus: true,
+                textInputAction: TextInputAction.next,
+                onFieldSubmitted: (_) => viewModel.processIntent(const WizardIntent.nextStep()),
+              ),
+            ],
+          ),
+        );
+      case 2:
+        return LuxuryCard(
+          key: const ValueKey('step2'),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'CONCIERGE INFORMATION',
+                style: AppTheme.luxuryTheme.textTheme.displaySmall,
+              ),
+              const SizedBox(height: 24),
+              LuxuryTextField(
+                label: 'FULL NAME',
+                hint: 'Enter Concierge Name',
+                controller: _conciergeController,
+                onChanged: (val) => viewModel.processIntent(WizardIntent.updateConciergeName(val)),
+                autofocus: true,
+                textInputAction: TextInputAction.done,
+                onFieldSubmitted: (_) => viewModel.processIntent(const WizardIntent.submit()),
+              ),
+            ],
+          ),
+        );
+      default:
+        return const SizedBox.shrink();
+    }
+  }
+}
