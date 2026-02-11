@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:printing/printing.dart';
-import '../../../core/services/eco_pdf_service.dart';
+import '../../../features/pdf_reports/data/services/eco_pdf_service_impl.dart';
 import '../../../features/residents/presentation/residents_controller.dart';
 import '../../../features/settings/presentation/settings_controller.dart';
 import '../../../features/transactions/data/transaction_repository.dart';
-import '../../../domain/entities/resident.dart';
+import '../../../features/residents/domain/entities/resident.dart';
 
 class AdministrativeHubScreen extends ConsumerWidget {
   const AdministrativeHubScreen({super.key});
@@ -227,8 +227,8 @@ class AdministrativeHubScreen extends ConsumerWidget {
     final amountCents = (resident.monthlyFee * 3) * 100;
 
     try {
-      final config = await ref.read(settingsControllerProvider.future);
-      final pdfService = EcoPdfService(config);
+      await ref.read(settingsControllerProvider.future);
+      final pdfService = ref.read(pdfServiceProvider);
       final pdf = await pdfService.generateAppelDeFonds(
         resident,
         amountCents,
@@ -271,7 +271,7 @@ class AdministrativeHubScreen extends ConsumerWidget {
                   final config = await ref.read(
                     settingsControllerProvider.future,
                   );
-                  final pdfService = EcoPdfService(config);
+                  final pdfService = ref.read(pdfServiceProvider);
                   final pdf = await pdfService.generateReceipt(
                     tx,
                     "Copropriétaire",
@@ -291,8 +291,8 @@ class AdministrativeHubScreen extends ConsumerWidget {
     WidgetRef ref,
   ) async {
     try {
-      final config = await ref.read(settingsControllerProvider.future);
-      final pdfService = EcoPdfService(config);
+      await ref.read(settingsControllerProvider.future);
+      final pdfService = ref.read(pdfServiceProvider);
       final residents = await ref.read(residentsListProvider.future);
 
       Map<int, Map<int, bool>> matrix = {};
@@ -318,8 +318,8 @@ class AdministrativeHubScreen extends ConsumerWidget {
     WidgetRef ref,
   ) async {
     try {
-      final config = await ref.read(settingsControllerProvider.future);
-      final pdfService = EcoPdfService(config);
+      await ref.read(settingsControllerProvider.future);
+      final pdfService = ref.read(pdfServiceProvider);
 
       final pdf = await pdfService.generateJournalCaisse(
         15000.0,
@@ -382,7 +382,7 @@ class AdministrativeHubScreen extends ConsumerWidget {
                 final config = await ref.read(
                   settingsControllerProvider.future,
                 );
-                final pdfService = EcoPdfService(config);
+                final pdfService = ref.read(pdfServiceProvider);
 
                 final supplier = {
                   'name': providerCtrl.text,
@@ -469,7 +469,7 @@ class AdministrativeHubScreen extends ConsumerWidget {
                   final config = await ref.read(
                     settingsControllerProvider.future,
                   );
-                  final pdfService = EcoPdfService(config);
+                  final pdfService = ref.read(pdfServiceProvider);
 
                   final hours = double.tryParse(hoursCtrl.text) ?? 0;
                   final rate = double.tryParse(rateCtrl.text) ?? 20;
@@ -540,7 +540,7 @@ class AdministrativeHubScreen extends ConsumerWidget {
                 final config = await ref.read(
                   settingsControllerProvider.future,
                 );
-                final pdfService = EcoPdfService(config);
+                final pdfService = ref.read(pdfServiceProvider);
                 final pdf = await pdfService.generateContratConcierge(
                   nameCtrl.text,
                   cinCtrl.text,
@@ -596,8 +596,8 @@ class AdministrativeHubScreen extends ConsumerWidget {
           ),
           ElevatedButton(
             onPressed: () async {
-              final config = await ref.read(settingsControllerProvider.future);
-              final pdfService = EcoPdfService(config);
+              await ref.read(settingsControllerProvider.future);
+              final pdfService = ref.read(pdfServiceProvider);
               final pdf = await pdfService.generateBulletinPaieConcierge(
                 nameCtrl.text,
                 "CIN",
@@ -629,8 +629,8 @@ class AdministrativeHubScreen extends ConsumerWidget {
     WidgetRef ref,
     Resident resident,
   ) async {
-    final config = await ref.read(settingsControllerProvider.future);
-    final pdfService = EcoPdfService(config);
+    await ref.read(settingsControllerProvider.future);
+    final pdfService = ref.read(pdfServiceProvider);
     final pdf = await pdfService.generatePouvoir(resident, DateTime.now());
     await Printing.layoutPdf(onLayout: (_) => pdf.readAsBytes());
   }
@@ -648,8 +648,8 @@ class AdministrativeHubScreen extends ConsumerWidget {
         actions: [
           ElevatedButton(
             onPressed: () async {
-              final config = await ref.read(settingsControllerProvider.future);
-              final pdfService = EcoPdfService(config);
+              await ref.read(settingsControllerProvider.future);
+              final pdfService = ref.read(pdfServiceProvider);
               final pdf = await pdfService.generateDechargeLogement(
                 nameCtrl.text,
                 DateTime.now(),
@@ -672,8 +672,8 @@ class AdministrativeHubScreen extends ConsumerWidget {
     Resident resident,
   ) async {
     const debt = 50000;
-    final config = await ref.read(settingsControllerProvider.future);
-    final pdfService = EcoPdfService(config);
+    await ref.read(settingsControllerProvider.future);
+    final pdfService = ref.read(pdfServiceProvider);
     final pdf = await pdfService.generateMiseEnDemeure(
       resident,
       debt,
@@ -687,8 +687,8 @@ class AdministrativeHubScreen extends ConsumerWidget {
     WidgetRef ref,
     Resident resident,
   ) async {
-    final config = await ref.read(settingsControllerProvider.future);
-    final pdfService = EcoPdfService(config);
+    await ref.read(settingsControllerProvider.future);
+    final pdfService = ref.read(pdfServiceProvider);
     final pdf = await pdfService.generateConsentementDigital(
       resident,
       resident.apartment,

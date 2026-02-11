@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:printing/printing.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:path_provider/path_provider.dart';
-import '../../../../core/services/eco_pdf_service.dart';
+import '../../../../features/pdf_reports/data/services/eco_pdf_service_impl.dart';
 import '../../residents/presentation/residents_controller.dart';
 import '../../settings/presentation/settings_controller.dart';
 
@@ -34,8 +34,8 @@ class _ConvocationDialogState extends ConsumerState<ConvocationDialog> {
     setState(() => _isGenerating = true);
 
     try {
-      final config = await ref.read(settingsControllerProvider.future);
-      final pdfService = EcoPdfService(config);
+      await ref.read(settingsControllerProvider.future);
+      final pdfService = ref.read(pdfServiceProvider);
 
       // Parse agenda from text (bullet points by newline)
       final agendaItems = _agendaController.text

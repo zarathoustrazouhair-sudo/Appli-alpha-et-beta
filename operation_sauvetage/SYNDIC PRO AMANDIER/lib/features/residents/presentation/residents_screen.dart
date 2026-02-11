@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../domain/entities/resident.dart';
+import '../../../features/residents/domain/entities/resident.dart';
 import 'residents_controller.dart';
 import 'add_resident_modal.dart';
 import 'resident_detail_screen.dart';

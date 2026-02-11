@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:drift/drift.dart'
     hide Column; // Hide Column to avoid conflict with Flutter
-import '../../../../domain/repositories/resident_repository.dart';
+import '../../../../features/residents/data/repositories/resident_repository.dart';
 import '../../../../data/database/database_provider.dart';
 import '../../residents/presentation/residents_controller.dart'; // IMPORT ADDED
 import 'global_report_controller.dart'; // Reconnect Orphan Controller

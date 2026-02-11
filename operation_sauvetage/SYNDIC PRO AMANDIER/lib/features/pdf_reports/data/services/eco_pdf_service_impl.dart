@@ -4,13 +4,23 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
-import '../../data/database/database.dart';
-import '../../domain/entities/resident.dart' as domain;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../data/database/database.dart';
+import '../../../../features/residents/domain/entities/resident.dart' as domain;
+import '../../../../features/settings/presentation/settings_controller.dart';
+import '../../domain/pdf_service_interface.dart';
 
-class EcoPdfService {
+export '../../domain/pdf_service_interface.dart';
+
+final pdfServiceProvider = Provider<PdfServiceInterface>((ref) {
+  final config = ref.watch(settingsControllerProvider).valueOrNull ?? {};
+  return EcoPdfServiceImpl(config);
+});
+
+class EcoPdfServiceImpl implements PdfServiceInterface {
   final Map<String, String> config;
 
-  EcoPdfService(this.config);
+  EcoPdfServiceImpl(this.config);
 
   pw.TextStyle _getSerifStyle({
     double fontSize = 11,
@@ -112,6 +122,7 @@ class EcoPdfService {
   }
 
   // 1. APPEL DE FONDS
+  @override
   Future<File> generateAppelDeFonds(
     domain.Resident resident,
     int amountCents,
@@ -177,6 +188,7 @@ class EcoPdfService {
   }
 
   // 2. MISE EN DEMEURE
+  @override
   Future<File> generateMiseEnDemeure(
     domain.Resident resident,
     int debtCents,
@@ -274,6 +286,7 @@ class EcoPdfService {
   }
 
   // 3. RECEIPT
+  @override
   Future<File> generateReceipt(
     Transaction transaction,
     String residentName, {
@@ -366,6 +379,7 @@ class EcoPdfService {
   }
 
   // 4. CONVOCATION AG
+  @override
   Future<File> generateConvocationAG(
     List<String> agendaItems,
     DateTime date,
@@ -405,7 +419,7 @@ class EcoPdfService {
             ),
             pw.SizedBox(height: 10),
             pw.Text(
-              "Conformément à l'article 16 de la Loi 18-00, nous avons le plaisir de vous convoquer à l'Assemblée Générale Ordinaire qui se tiendra le :",
+              "Conformément à l'article 16 de la Loi 18-00, nous vous convoquer à l'Assemblée Générale Ordinaire qui se tiendra le :",
               style: _getSerifStyle(),
             ),
             pw.SizedBox(height: 10),
@@ -442,6 +456,7 @@ class EcoPdfService {
   }
 
   // 5. POUVOIR
+  @override
   Future<File> generatePouvoir(
     domain.Resident resident,
     DateTime agDate,
@@ -526,6 +541,7 @@ class EcoPdfService {
   }
 
   // 6. PV
+  @override
   Future<File> generatePV(
     DateTime date,
     int presentCount,
@@ -636,6 +652,7 @@ class EcoPdfService {
   }
 
   // 7. CONTRAT CONCIERGE (CDI)
+  @override
   Future<File> generateContratConcierge(
     String employeeName,
     String cin,
@@ -786,6 +803,7 @@ class EcoPdfService {
   }
 
   // 8. DECHARGE LOGEMENT (Anti-Squat)
+  @override
   Future<File> generateDechargeLogement(
     String employeeName,
     DateTime date,
@@ -880,6 +898,7 @@ class EcoPdfService {
   }
 
   // 9. CONSENTEMENT DIGITAL (WhatsApp)
+  @override
   Future<File> generateConsentementDigital(
     domain.Resident resident,
     String lotNumber,
@@ -970,6 +989,7 @@ class EcoPdfService {
   }
 
   // 10. BON DE COMMANDE
+  @override
   Future<File> generateBonDeCommande(
     String poNumber,
     Map<String, dynamic> supplier,
@@ -1078,6 +1098,7 @@ class EcoPdfService {
   }
 
   // 11. BULLETIN DE PAIE (Bouclier Social)
+  @override
   Future<File> generateBulletinPaieConcierge(
     String employeeName,
     String cin,
@@ -1229,6 +1250,7 @@ class EcoPdfService {
   }
 
   // 12. RECU PRESTATION MENAGE (Service Proof) - Fixed Identifier Name (Recu instead of Reçu)
+  @override
   Future<File> generateRecuPrestationMenage(
     String cleanerName,
     String cin,
@@ -1333,6 +1355,7 @@ class EcoPdfService {
   }
 
   // 13. JOURNAL CAISSE (Treasury Snapshot)
+  @override
   Future<File> generateJournalCaisse(
     double bankStart,
     double bankIn,
@@ -1451,6 +1474,7 @@ class EcoPdfService {
   }
 
   // 14. TABLEAU ANNUEL (Global Matrix)
+  @override
   Future<File> generateGlobalMatrix(
     List<domain.Resident> residents,
     Map<int, Map<int, bool>> paymentMatrix,

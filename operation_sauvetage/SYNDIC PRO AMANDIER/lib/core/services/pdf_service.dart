@@ -5,7 +5,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 import '../../domain/entities/payment.dart';
-import '../../domain/entities/resident.dart';
+import '../../features/residents/domain/entities/resident.dart';
 import '../../features/ag/domain/meeting.dart';
 import '../utils/formatters.dart';
 

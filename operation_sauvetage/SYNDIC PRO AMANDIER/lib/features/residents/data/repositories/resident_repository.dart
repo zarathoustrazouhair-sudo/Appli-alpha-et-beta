@@ -1,19 +1,23 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:drift/drift.dart';
 import 'dart:async';
-import '../../data/database/database.dart' hide Provider;
-import '../../data/database/database_provider.dart';
-import '../entities/resident.dart' as domain;
+import '../../../../data/database/database.dart' hide Provider;
+import '../../../../data/database/database_provider.dart';
+import '../../domain/entities/resident.dart' as domain;
+import '../../domain/repositories/resident_repository.dart';
+
+export '../../domain/repositories/resident_repository.dart';
 
 final residentRepositoryProvider = Provider<ResidentRepository>((ref) {
   final db = ref.watch(appDatabaseProvider);
-  return ResidentRepository(db);
+  return ResidentRepositoryImpl(db);
 });
 
-class ResidentRepository {
+class ResidentRepositoryImpl implements ResidentRepository {
   final AppDatabase _db;
-  ResidentRepository(this._db);
+  ResidentRepositoryImpl(this._db);
 
+  @override
   Stream<List<domain.Resident>> watchAllResidents() {
     return (_db.select(_db.residents)
           ..orderBy([(t) => OrderingTerm(expression: t.name)]))
@@ -21,6 +25,7 @@ class ResidentRepository {
         .map((rows) => rows.map((row) => _toDomain(row)).toList());
   }
 
+  @override
   Future<List<domain.Resident>> getResidents() async {
     final rows = await (_db.select(
       _db.residents,
@@ -28,12 +33,14 @@ class ResidentRepository {
     return rows.map((row) => _toDomain(row)).toList();
   }
 
+  @override
   Stream<List<Payment>> getPayments(domain.Resident resident) {
     return (_db.select(
       _db.payments,
     )..where((t) => t.residentId.equals(resident.id))).watch();
   }
 
+  @override
   Stream<double> getResidentBalance(domain.Resident resident) {
     final id = resident.id;
 
@@ -63,6 +70,7 @@ class ResidentRepository {
     });
   }
 
+  @override
   Future<void> addResident(
     String name,
     String building,
@@ -86,6 +94,7 @@ class ResidentRepository {
         );
   }
 
+  @override
   Future<void> updateResident(domain.Resident resident) {
     return (_db.update(
       _db.residents,
@@ -102,16 +111,19 @@ class ResidentRepository {
     );
   }
 
+  @override
   Future<void> deleteResident(int id) {
     return (_db.delete(_db.residents)..where((t) => t.id.equals(id))).go();
   }
 
+  @override
   Future<void> updateAllFees(int newFee) async {
     await (_db.update(
       _db.residents,
     )).write(ResidentsCompanion(monthlyFee: Value(newFee)));
   }
 
+  @override
   Future<void> addPayment(int residentId, double amount, DateTime date) async {
     return _db.transaction(() async {
       // 1. Add Payment Record (Resident History)

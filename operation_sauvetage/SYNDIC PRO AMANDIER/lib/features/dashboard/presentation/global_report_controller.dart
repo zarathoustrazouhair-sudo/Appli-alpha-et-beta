@@ -1,6 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../../../../core/services/eco_pdf_service.dart';
-import '../../../../domain/repositories/resident_repository.dart';
+import '../../../../features/pdf_reports/data/services/eco_pdf_service_impl.dart';
+import '../../../../features/residents/data/repositories/resident_repository.dart';
 import '../../settings/presentation/settings_controller.dart';
 import 'package:printing/printing.dart';
 
@@ -13,7 +13,7 @@ class GlobalReportController extends _$GlobalReportController {
 
   Future<void> generateAndPrint() async {
     final residentRepo = ref.read(residentRepositoryProvider);
-    final config = await ref.read(settingsControllerProvider.future);
+    await ref.read(settingsControllerProvider.future);
 
     // final residents = await residentRepo.getResidents(); // Unused for now
 
@@ -25,7 +25,7 @@ class GlobalReportController extends _$GlobalReportController {
     }
     */
 
-    final pdfService = EcoPdfService(config);
+    final pdfService = ref.read(pdfServiceProvider);
 
     // Generate Journal Caisse as the global report
     final pdfFile = await pdfService.generateJournalCaisse(

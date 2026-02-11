@@ -23,8 +23,15 @@ Ce dépôt est un **Monorepo Logique** unique. Il contient un SEUL projet Flutte
 *   **Utils** : `fpdart` (Functional Programming), `freezed` (Immutability), `flutter_dotenv` (Secrets).
 
 ## @Architecture (Clean Architecture + MVI)
-L'application suit strictement la Clean Architecture avec un flux unidirectionnel (MVI) :
+L'application suit strictement la Clean Architecture avec un flux unidirectionnel (MVI) et une structure de dossiers **"Feature-First"**.
 
+### Règle d'Or : Tout code métier appartient à une feature nommée.
+*   **Structure Obligatoire** :
+    *   `lib/features/<nom>/domain/` : Entités, UseCases, Interfaces Repository. (Pur Dart, zéro dépendance Flutter/Drift idéalement).
+    *   `lib/features/<nom>/data/` : Implémentations Repository, DataSources, DTOs.
+    *   `lib/features/<nom>/presentation/` : Widgets, Controllers (Riverpod).
+
+### Couches
 1.  **Presentation (UI)** :
     *   **Widgets** : "Dumb Components". Ils ne font qu'afficher des données et émettre des événements. AUCUNE logique métier.
     *   **ViewModels** : Classes annotées `@riverpod`. Utilisent `AsyncNotifier` pour exposer un état immuable (`AsyncValue<State>`).
@@ -39,10 +46,11 @@ L'application suit strictement la Clean Architecture avec un flux unidirectionne
 ## @Style & Conventions
 *   **Fichiers** : `snake_case.dart` (ex: `auth_repository.dart`).
 *   **Classes** : `PascalCase` (ex: `AuthRepository`).
-*   **Dossiers** : Structure "Feature-First".
+*   **Dossiers** : Structure "Feature-First" stricte.
     *   `lib/features/auth/`
     *   `lib/features/dashboard/`
-    *   `lib/core/` (Theme, Utils, Constants)
+    *   `lib/core/` (Theme, Utils, Constants partagés par >1 feature)
+    *   ⛔️ **INTERDIT** : Créer des dossiers `domain` ou `data` à la racine de `lib/` (sauf pour la DB globale existante).
 *   **Riverpod Example** ("Show, Don't Tell") :
     ```dart
     @riverpod

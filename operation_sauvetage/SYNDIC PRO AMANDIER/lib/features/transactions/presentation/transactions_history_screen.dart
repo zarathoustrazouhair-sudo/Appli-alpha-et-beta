@@ -5,7 +5,7 @@ import '../../../../data/database/database.dart' hide Provider;
 import '../data/transaction_repository.dart';
 import 'transaction_entry_screen.dart';
 import '../../../../features/settings/presentation/settings_controller.dart';
-import '../../../../core/services/eco_pdf_service.dart';
+import '../../../../features/pdf_reports/data/services/eco_pdf_service_impl.dart';
 
 // Const Color for Low RAM usage
 const Color kCardColor = Color(0xFF1E1E1E);
@@ -79,7 +79,7 @@ class TransactionsHistoryScreen extends ConsumerWidget {
                             final config = await ref.read(
                               settingsControllerProvider.future,
                             );
-                            final pdfService = EcoPdfService(config);
+                            final pdfService = ref.read(pdfServiceProvider);
                             // Need resident name? Receipt usually implies resident payment.
                             // But Transaction table doesn't link to Resident directly unless we join or parse desc.
                             // For now, pass "Résident / Fournisseur" or check if `debitAccountId` is a Class 7 (Revenue from resident).

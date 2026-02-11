@@ -41,7 +41,7 @@ class MeetingLiveScreen extends ConsumerWidget {
               final presentCount = residents.length - absents.length;
               final quorum = (presentCount / residents.length) * 100;
 
-              final config = await ref.read(settingsControllerProvider.future);
+              await ref.read(settingsControllerProvider.future);
               final pdfService = PdfService(config);
               final pvFile = await pdfService.generatePV(
                 meeting,

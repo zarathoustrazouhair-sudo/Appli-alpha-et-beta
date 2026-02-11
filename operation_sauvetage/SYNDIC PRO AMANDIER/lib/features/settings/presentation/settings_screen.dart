@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 import '../presentation/settings_controller.dart';
-import '../../../../domain/repositories/resident_repository.dart';
+import '../../../../features/residents/data/repositories/resident_repository.dart';
 
 class SettingsFormScreen extends ConsumerStatefulWidget {
   const SettingsFormScreen({super.key});
@@ -47,7 +47,7 @@ class _SettingsFormScreenState extends ConsumerState<SettingsFormScreen> {
   }
 
   Future<void> _loadData() async {
-    final config = await ref.read(settingsControllerProvider.future);
+    await ref.read(settingsControllerProvider.future);
     setState(() {
       _logoPath = config['LOGO_PATH'];
       _syndicNameCtrl.text = config['SYNDIC_NAME'] ?? '';

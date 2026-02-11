@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:printing/printing.dart';
-import '../../../domain/entities/resident.dart';
+import '../../../features/residents/domain/entities/resident.dart';
 import 'resident_detail_controller.dart';
 import 'residents_controller.dart';
-import '../../../../core/services/eco_pdf_service.dart'; // Upgrade to EcoPdfService
+import '../../../../features/pdf_reports/data/services/eco_pdf_service_impl.dart'; // Upgrade to EcoPdfService
 import '../../../../data/database/database.dart' hide Resident, Payment;
 import '../../settings/presentation/settings_controller.dart';
 import '../domain/history_item.dart'; // IMPORT THIS
@@ -128,7 +128,7 @@ class _ResidentDetailScreenState extends ConsumerState<ResidentDetailScreen> {
 
     lastPaymentItem.map(
       payment: (p) async {
-        final config = await ref.read(settingsControllerProvider.future);
+        await ref.read(settingsControllerProvider.future);
 
         final transaction = Transaction(
           id: p.id,
@@ -139,7 +139,7 @@ class _ResidentDetailScreenState extends ConsumerState<ResidentDetailScreen> {
           description: "Cotisation (Réimpression)",
         );
 
-        final pdfService = EcoPdfService(config);
+        final pdfService = ref.read(pdfServiceProvider);
         final pdfFile = await pdfService.generateReceipt(
           transaction,
           resident.name,
