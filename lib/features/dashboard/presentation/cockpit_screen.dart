@@ -6,7 +6,7 @@ import 'package:residence_lamandier_b/features/dashboard/presentation/widgets/ch
 import 'package:residence_lamandier_b/features/dashboard/presentation/widgets/charts/recovery_disk.dart';
 import 'package:residence_lamandier_b/features/dashboard/presentation/widgets/kpi_cards.dart';
 import 'package:residence_lamandier_b/features/dashboard/presentation/widgets/reminder_row.dart';
-import 'package:residence_lamandier_b/core/security/role_guards.dart';
+import 'package:residence_lamandier_b/core/router/role_guards.dart';
 import 'package:residence_lamandier_b/core/router/app_router.dart';
 
 class CockpitScreen extends ConsumerWidget {
