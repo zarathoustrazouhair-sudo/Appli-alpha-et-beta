@@ -54,6 +54,7 @@ class BlogFeedScreen extends ConsumerWidget {
   Widget _buildPostCard(BuildContext context, PostEntity post) {
     return LuxuryCard(
       padding: EdgeInsets.zero,
+      withBlur: false, // Optimize performance
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
