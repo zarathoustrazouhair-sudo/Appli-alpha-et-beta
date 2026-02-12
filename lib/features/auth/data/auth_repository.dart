@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:residence_lamandier_b/core/router/role_guards.dart';
+import 'package:residence_lamandier_b/core/utils/validators.dart';
 
 part 'auth_repository.g.dart';
 
@@ -15,16 +16,28 @@ class AuthRepository {
   AuthRepository(this._client);
 
   Future<void> signIn(String email, String password) async {
+    // SECURITY: Input Validation
+    if (!AppValidators.isValidEmail(email)) {
+      throw Exception("Format d'email invalide");
+    }
+    if (!AppValidators.isValidPassword(password)) {
+      throw Exception("Le mot de passe doit contenir au moins 6 caractères");
+    }
+
     try {
       final response = await _client.auth.signInWithPassword(
         email: email,
         password: password,
       );
       if (response.user == null) {
-        throw Exception("Login failed: User is null");
+        throw Exception("Échec de la connexion: Utilisateur non trouvé");
       }
+    } on AuthException catch (e) {
+      // SECURITY: Handle known Supabase Auth errors safely without exposing internals
+      throw Exception("Erreur d'authentification: ${e.message}");
     } catch (e) {
-      throw Exception("Login failed: ${e.toString()}");
+      // SECURITY: Generic error for unknown issues to prevent leaking stack traces
+      throw Exception("Une erreur est survenue lors de la connexion");
     }
   }
 
