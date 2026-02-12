@@ -6,49 +6,57 @@ class LuxuryCard extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry padding;
   final VoidCallback? onTap;
+  final bool withBlur;
 
   const LuxuryCard({
     super.key,
     required this.child,
     this.padding = const EdgeInsets.all(16),
     this.onTap,
+    this.withBlur = true,
   });
 
   @override
   Widget build(BuildContext context) {
-    final card = ClipRRect(
-      borderRadius: BorderRadius.circular(16),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-        child: Container(
-          padding: padding,
-          decoration: BoxDecoration(
-            color: AppPalettes.navy.withOpacity(0.7),
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: AppPalettes.gold.withOpacity(0.3),
-              width: 1,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.5),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: child,
+    Widget cardContent = Container(
+      padding: padding,
+      decoration: BoxDecoration(
+        color: AppPalettes.navy.withOpacity(withBlur ? 0.7 : 0.9),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: AppPalettes.gold.withOpacity(0.3),
+          width: 1,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.5),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
+      child: child,
+    );
+
+    if (withBlur) {
+      cardContent = BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: cardContent,
+      );
+    }
+
+    cardContent = ClipRRect(
+      borderRadius: BorderRadius.circular(16),
+      child: cardContent,
     );
 
     if (onTap != null) {
       return GestureDetector(
         onTap: onTap,
-        child: card,
+        child: cardContent,
       );
     }
-    return card;
+    return cardContent;
   }
 }
 
