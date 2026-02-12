@@ -1,0 +1,3 @@
+## 2024-05-23 - [Optimize Image Loading in Blog Feed]
+**Learning:** Loading full-resolution images (often 4K from user uploads) into `CachedNetworkImage` without specifying `memCacheHeight` or `memCacheWidth` causes massive memory consumption because the image is decoded at full size, even if displayed in a small `Container`. This is especially critical in `ListView` where multiple images are loaded.
+**Action:** Always specify `memCacheHeight` or `memCacheWidth` in `CachedNetworkImage` when the display size is known and significantly smaller than the potential source image. A good rule of thumb is 3x-4x the logical pixel size to account for high-density screens.
