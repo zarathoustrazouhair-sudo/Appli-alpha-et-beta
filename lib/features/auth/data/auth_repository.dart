@@ -21,7 +21,7 @@ class AuthRepository {
       throw Exception("Format d'email invalide");
     }
     if (!AppValidators.isValidPassword(password)) {
-      throw Exception("Le mot de passe doit contenir au moins 6 caractères");
+      throw Exception("Le mot de passe doit contenir au moins 8 caractères, une lettre et un chiffre");
     }
 
     try {
