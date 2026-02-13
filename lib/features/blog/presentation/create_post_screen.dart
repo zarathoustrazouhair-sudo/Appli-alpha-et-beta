@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:residence_lamandier_b/core/theme/app_palettes.dart';
-import 'package:residence_lamandier_b/core/theme/luxury_widgets.dart';
+import 'package:residence_lamandier_b/core/theme/widgets/luxury_button.dart';
 import 'package:residence_lamandier_b/core/theme/widgets/luxury_text_field.dart'; // Keep generic text field for inputs
 import 'package:residence_lamandier_b/features/blog/data/blog_repository.dart';
 import 'package:residence_lamandier_b/core/router/app_router.dart';
@@ -142,7 +142,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
             ),
 
             const SizedBox(height: 32),
-            GoldButton(
+            LuxuryButton(
               label: "PUBLIER",
               isLoading: _isLoading,
               onPressed: _submitPost,

@@ -1,7 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:residence_lamandier_b/core/theme/app_palettes.dart';
-import 'package:residence_lamandier_b/core/theme/luxury_widgets.dart';
+import 'package:residence_lamandier_b/core/theme/widgets/luxury_card.dart';
 
 class CashflowCurve extends StatelessWidget {
   const CashflowCurve({super.key});
