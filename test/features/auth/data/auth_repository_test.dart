@@ -26,10 +26,28 @@ void main() {
 
     test('signIn throws exception for short password', () async {
       expect(
-        () => authRepository.signIn('valid@email.com', '123'),
+        () => authRepository.signIn('valid@email.com', '1234567'), // 7 chars
         throwsA(predicate((e) =>
             e is Exception &&
-            e.toString().contains("Le mot de passe doit contenir au moins 6 caractères"))),
+            e.toString().contains("Le mot de passe doit contenir au moins 8 caractères, une lettre et un chiffre"))),
+      );
+    });
+
+    test('signIn throws exception for password without number', () async {
+      expect(
+        () => authRepository.signIn('valid@email.com', 'password'), // 8 chars, no number
+        throwsA(predicate((e) =>
+            e is Exception &&
+            e.toString().contains("Le mot de passe doit contenir au moins 8 caractères, une lettre et un chiffre"))),
+      );
+    });
+
+    test('signIn throws exception for password without letter', () async {
+      expect(
+        () => authRepository.signIn('valid@email.com', '12345678'), // 8 chars, no letter
+        throwsA(predicate((e) =>
+            e is Exception &&
+            e.toString().contains("Le mot de passe doit contenir au moins 8 caractères, une lettre et un chiffre"))),
       );
     });
 
