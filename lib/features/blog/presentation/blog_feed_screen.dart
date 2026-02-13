@@ -3,7 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:residence_lamandier_b/core/theme/app_palettes.dart';
-import 'package:residence_lamandier_b/core/theme/luxury_widgets.dart';
+import 'package:residence_lamandier_b/core/theme/widgets/luxury_button.dart';
+import 'package:residence_lamandier_b/core/theme/widgets/luxury_card.dart';
 import 'package:residence_lamandier_b/features/blog/data/post_entity.dart';
 import 'package:residence_lamandier_b/features/blog/data/blog_repository.dart';
 import 'package:residence_lamandier_b/core/router/app_router.dart';
@@ -54,7 +55,6 @@ class BlogFeedScreen extends ConsumerWidget {
   Widget _buildPostCard(BuildContext context, PostEntity post) {
     return LuxuryCard(
       padding: EdgeInsets.zero,
-      withBlur: false, // Optimize performance
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -113,7 +113,7 @@ class BlogFeedScreen extends ConsumerWidget {
                   style: const TextStyle(color: AppPalettes.offWhite, fontSize: 14, height: 1.5),
                 ),
                 const SizedBox(height: 16),
-                GoldButton(
+                LuxuryButton(
                   label: "LIRE LA SUITE",
                   onPressed: () {
                     Navigator.push(
