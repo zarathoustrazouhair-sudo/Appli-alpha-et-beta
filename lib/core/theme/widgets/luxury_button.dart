@@ -6,6 +6,7 @@ class LuxuryButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final bool isLoading;
   final IconData? icon;
+  final String loadingLabel;
 
   const LuxuryButton({
     super.key,
@@ -13,6 +14,7 @@ class LuxuryButton extends StatelessWidget {
     required this.onPressed,
     this.isLoading = false,
     this.icon,
+    this.loadingLabel = 'Chargement...',
   });
 
   @override
@@ -47,12 +49,15 @@ class LuxuryButton extends StatelessWidget {
           ),
         ),
         child: isLoading
-            ? const SizedBox(
-                width: 24,
-                height: 24,
-                child: CircularProgressIndicator(
-                  color: AppTheme.darkNavy,
-                  strokeWidth: 2,
+            ? Semantics(
+                label: loadingLabel,
+                child: const SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(
+                    color: AppTheme.darkNavy,
+                    strokeWidth: 2,
+                  ),
                 ),
               )
             : Row(
