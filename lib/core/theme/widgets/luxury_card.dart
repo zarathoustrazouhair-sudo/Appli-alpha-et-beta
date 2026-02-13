@@ -18,7 +18,9 @@ class LuxuryCard extends StatelessWidget {
     final card = Container(
       padding: padding,
       decoration: BoxDecoration(
-        color: AppTheme.darkNavy.withOpacity(0.8),
+        // Optimization: Use opaque color to avoid expensive alpha blending.
+        // Visually identical since background is also darkNavy.
+        color: AppTheme.darkNavy,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: AppTheme.gold.withOpacity(0.3),
