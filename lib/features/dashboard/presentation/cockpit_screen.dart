@@ -28,68 +28,87 @@ class CockpitScreen extends ConsumerWidget {
               child: const Icon(Icons.add, color: AppPalettes.navy),
             )
           : null,
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // 1. KPI Cards with Gold Shimmer Title
-            ShaderMask(
-              shaderCallback: (bounds) => AppPalettes.textGoldGradient,
-              child: const Text(
-                "SOLDE GLOBAL",
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 2.0,
-                  color: Colors.white, // Required for ShaderMask
-                ),
+      body: CustomScrollView(
+        slivers: [
+          SliverPadding(
+            padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0),
+            sliver: SliverToBoxAdapter(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // 1. KPI Cards with Gold Shimmer Title
+                  ShaderMask(
+                    shaderCallback: (bounds) => AppPalettes.textGoldGradient,
+                    child: const Text(
+                      "SOLDE GLOBAL",
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 2.0,
+                        color: Colors.white, // Required for ShaderMask
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  const KpiCards(),
+                  const SizedBox(height: 16),
+
+                  // 2. Reminder Row
+                  const ReminderRow(),
+                  const SizedBox(height: 24),
+
+                  // 3. Matrix
+                  Text(
+                    "MATRICE RÉSIDENTS",
+                    style: TextStyle(
+                      color: AppPalettes.offWhite.withOpacity(0.7),
+                      fontSize: 12,
+                      letterSpacing: 1.2,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                ],
               ),
             ),
-            const SizedBox(height: 8),
-            const KpiCards(),
-            const SizedBox(height: 16),
+          ),
+          const SliverPadding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            sliver: ApartmentGrid(), // Updated internally to use StatusBadge or logic if needed
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0),
+            sliver: SliverToBoxAdapter(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 24),
 
-            // 2. Reminder Row
-            const ReminderRow(),
-            const SizedBox(height: 24),
-
-            // 3. Matrix
-            Text(
-              "MATRICE RÉSIDENTS",
-              style: TextStyle(
-                color: AppPalettes.offWhite.withOpacity(0.7),
-                fontSize: 12,
-                letterSpacing: 1.2,
-                fontWeight: FontWeight.bold,
+                  // 4. Charts
+                  Text(
+                    "ANALYSE FINANCIÈRE",
+                    style: TextStyle(
+                      color: AppPalettes.offWhite.withOpacity(0.7),
+                      fontSize: 12,
+                      letterSpacing: 1.2,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  const Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(child: RecoveryDisk()),
+                      SizedBox(width: 8),
+                      Expanded(child: CashflowCurve()),
+                    ],
+                  ),
+                  const SizedBox(height: 32),
+                ],
               ),
             ),
-            const SizedBox(height: 12),
-            const ApartmentGrid(), // Updated internally to use StatusBadge or logic if needed
-            const SizedBox(height: 24),
-
-            // 4. Charts
-             Text(
-              "ANALYSE FINANCIÈRE",
-              style: TextStyle(
-                color: AppPalettes.offWhite.withOpacity(0.7),
-                fontSize: 12,
-                letterSpacing: 1.2,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 12),
-            const Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(child: RecoveryDisk()),
-                SizedBox(width: 8),
-                Expanded(child: CashflowCurve()),
-              ],
-            ),
-            const SizedBox(height: 32),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
