@@ -9,7 +9,11 @@ void main() {
     await tester.pumpWidget(
       const MaterialApp(
         home: Scaffold(
-          body: ApartmentGrid(),
+          body: CustomScrollView(
+            slivers: [
+              ApartmentGrid(),
+            ],
+          ),
         ),
       ),
     );
