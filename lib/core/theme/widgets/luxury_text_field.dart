@@ -10,6 +10,9 @@ class LuxuryTextField extends StatelessWidget {
   final TextInputType? keyboardType;
   final ValueChanged<String>? onChanged;
   final String? Function(String?)? validator;
+  final bool autofocus;
+  final TextInputAction? textInputAction;
+  final ValueChanged<String>? onFieldSubmitted;
 
   const LuxuryTextField({
     super.key,
@@ -21,6 +24,9 @@ class LuxuryTextField extends StatelessWidget {
     this.keyboardType,
     this.onChanged,
     this.validator,
+    this.autofocus = false,
+    this.textInputAction,
+    this.onFieldSubmitted,
   });
 
   @override
@@ -39,6 +45,9 @@ class LuxuryTextField extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         TextFormField(
+          autofocus: autofocus,
+          textInputAction: textInputAction,
+          onFieldSubmitted: onFieldSubmitted,
           initialValue: initialValue,
           controller: controller,
           obscureText: obscureText,
