@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:residence_lamandier_b/core/theme/luxury_theme.dart';
 
-class LuxuryTextField extends StatelessWidget {
+class LuxuryTextField extends StatefulWidget {
   final String label;
   final String? hint;
   final String? initialValue;
@@ -30,12 +30,40 @@ class LuxuryTextField extends StatelessWidget {
   });
 
   @override
+  State<LuxuryTextField> createState() => _LuxuryTextFieldState();
+}
+
+class _LuxuryTextFieldState extends State<LuxuryTextField> {
+  late TextEditingController _internalController;
+  late bool _isObscured;
+
+  TextEditingController get _effectiveController =>
+      widget.controller ?? _internalController;
+
+  @override
+  void initState() {
+    super.initState();
+    _isObscured = widget.obscureText;
+    if (widget.controller == null) {
+      _internalController = TextEditingController(text: widget.initialValue);
+    } else {
+      _internalController = TextEditingController();
+    }
+  }
+
+  @override
+  void dispose() {
+    _internalController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          label.toUpperCase(),
+          widget.label.toUpperCase(),
           style: TextStyle(
             color: AppTheme.gold.withOpacity(0.9),
             fontWeight: FontWeight.bold,
@@ -44,41 +72,77 @@ class LuxuryTextField extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        TextFormField(
-          autofocus: autofocus,
-          textInputAction: textInputAction,
-          onFieldSubmitted: onFieldSubmitted,
-          initialValue: initialValue,
-          controller: controller,
-          obscureText: obscureText,
-          keyboardType: keyboardType,
-          onChanged: onChanged,
-          validator: validator,
-          style: const TextStyle(color: AppTheme.offWhite),
-          decoration: InputDecoration(
-            hintText: hint,
-            hintStyle: TextStyle(color: AppTheme.offWhite.withOpacity(0.4)),
-            filled: true,
-            fillColor: AppTheme.darkNavy.withOpacity(0.5),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: AppTheme.gold.withOpacity(0.3)),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: AppTheme.gold.withOpacity(0.3)),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppTheme.gold, width: 2),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppTheme.errorRed, width: 1),
-            ),
-          ),
+        ValueListenableBuilder<TextEditingValue>(
+          valueListenable: _effectiveController,
+          builder: (context, value, child) {
+            return TextFormField(
+              autofocus: widget.autofocus,
+              textInputAction: widget.textInputAction,
+              onFieldSubmitted: widget.onFieldSubmitted,
+              controller: _effectiveController,
+              obscureText: _isObscured,
+              keyboardType: widget.keyboardType,
+              onChanged: widget.onChanged,
+              validator: widget.validator,
+              style: const TextStyle(color: AppTheme.offWhite),
+              decoration: InputDecoration(
+                hintText: widget.hint,
+                hintStyle: TextStyle(color: AppTheme.offWhite.withOpacity(0.4)),
+                filled: true,
+                fillColor: AppTheme.darkNavy.withOpacity(0.5),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: AppTheme.gold.withOpacity(0.3)),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: AppTheme.gold.withOpacity(0.3)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(color: AppTheme.gold, width: 2),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(color: AppTheme.errorRed, width: 1),
+                ),
+                suffixIcon: _buildSuffixIcon(value.text.isNotEmpty),
+              ),
+            );
+          },
         ),
       ],
     );
+  }
+
+  Widget? _buildSuffixIcon(bool hasText) {
+    if (widget.obscureText) {
+      return IconButton(
+        icon: Icon(
+          _isObscured ? Icons.visibility : Icons.visibility_off,
+          color: AppTheme.gold.withOpacity(0.7),
+        ),
+        tooltip: _isObscured ? 'Afficher le mot de passe' : 'Masquer le mot de passe',
+        onPressed: () {
+          setState(() {
+            _isObscured = !_isObscured;
+          });
+        },
+      );
+    } else if (hasText) {
+      return IconButton(
+        icon: Icon(
+          Icons.close,
+          color: AppTheme.gold.withOpacity(0.5),
+          size: 20,
+        ),
+        tooltip: 'Effacer le texte',
+        onPressed: () {
+          _effectiveController.clear();
+          widget.onChanged?.call('');
+        },
+      );
+    }
+    return null;
   }
 }
