@@ -23,12 +23,26 @@ class PostDetailScreen extends StatelessWidget {
               background: post.imageUrl != null && post.imageUrl!.isNotEmpty
                   ? CachedNetworkImage(
                       imageUrl: post.imageUrl!,
-                      memCacheHeight: 1200, // Optimize memory usage (approx 4x expanded height)
+                      memCacheHeight:
+                          1200, // Optimize memory usage (approx 4x expanded height)
                       fit: BoxFit.cover,
-                      placeholder: (context, url) => Container(color: Colors.black26),
-                      errorWidget: (context, url, error) => Container(color: Colors.black26, child: const Icon(Icons.error)),
+                      placeholder: (context, url) =>
+                          Container(color: Colors.black26),
+                      errorWidget: (context, url, error) => Container(
+                        color: Colors.black26,
+                        child: const Icon(Icons.error),
+                      ),
                     )
-                  : Container(color: Colors.black26, child: const Center(child: Icon(Icons.article, size: 64, color: Colors.grey))),
+                  : Container(
+                      color: Colors.black26,
+                      child: const Center(
+                        child: Icon(
+                          Icons.article,
+                          size: 64,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
             ),
             leading: Container(
               margin: const EdgeInsets.all(8),
@@ -50,13 +64,30 @@ class PostDetailScreen extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      const CircleAvatar(backgroundColor: AppPalettes.gold, radius: 20, child: Icon(Icons.person, color: AppPalettes.navy)),
+                      const CircleAvatar(
+                        backgroundColor: AppPalettes.gold,
+                        radius: 20,
+                        child: Icon(Icons.person, color: AppPalettes.navy),
+                      ),
                       const SizedBox(width: 12),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(post.author, style: const TextStyle(color: AppPalettes.offWhite, fontWeight: FontWeight.bold, fontSize: 16)),
-                          Text(timeago.format(post.createdAt), style: TextStyle(color: AppPalettes.offWhite.withOpacity(0.5), fontSize: 12)),
+                          Text(
+                            post.author,
+                            style: const TextStyle(
+                              color: AppPalettes.offWhite,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                          Text(
+                            timeago.format(post.createdAt),
+                            style: TextStyle(
+                              color: AppPalettes.offWhite.withOpacity(0.5),
+                              fontSize: 12,
+                            ),
+                          ),
                         ],
                       ),
                     ],
@@ -73,7 +104,11 @@ class PostDetailScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  Container(height: 1, width: 100, color: AppPalettes.gold.withOpacity(0.5)),
+                  Container(
+                    height: 1,
+                    width: 100,
+                    color: AppPalettes.gold.withOpacity(0.5),
+                  ),
                   const SizedBox(height: 24),
                   Text(
                     post.content,

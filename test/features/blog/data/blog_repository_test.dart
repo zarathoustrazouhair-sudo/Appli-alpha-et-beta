@@ -23,9 +23,13 @@ void main() {
           content: 'Valid content',
           userRole: UserRole.resident,
         ),
-        throwsA(predicate((e) =>
-            e is Exception &&
-            e.toString().contains("Le titre est trop long"))),
+        throwsA(
+          predicate(
+            (e) =>
+                e is Exception &&
+                e.toString().contains("Le titre est trop long"),
+          ),
+        ),
       );
     });
 
@@ -37,9 +41,13 @@ void main() {
           content: longContent,
           userRole: UserRole.resident,
         ),
-        throwsA(predicate((e) =>
-            e is Exception &&
-            e.toString().contains("Le contenu est trop long"))),
+        throwsA(
+          predicate(
+            (e) =>
+                e is Exception &&
+                e.toString().contains("Le contenu est trop long"),
+          ),
+        ),
       );
     });
 
@@ -50,37 +58,48 @@ void main() {
           content: 'Valid content',
           userRole: UserRole.resident,
         ),
-        throwsA(predicate((e) =>
-            e is Exception &&
-            e.toString().contains("Le titre ne peut pas être vide"))),
+        throwsA(
+          predicate(
+            (e) =>
+                e is Exception &&
+                e.toString().contains("Le titre ne peut pas être vide"),
+          ),
+        ),
       );
     });
 
-     test('createPost throws exception for empty content', () async {
+    test('createPost throws exception for empty content', () async {
       expect(
         () => blogRepository.createPost(
           title: 'Valid Title',
           content: '',
           userRole: UserRole.resident,
         ),
-        throwsA(predicate((e) =>
-            e is Exception &&
-            e.toString().contains("Le contenu ne peut pas être vide"))),
+        throwsA(
+          predicate(
+            (e) =>
+                e is Exception &&
+                e.toString().contains("Le contenu ne peut pas être vide"),
+          ),
+        ),
       );
     });
 
-    test('createPost proceeds (throws UnimplementedError) for valid input', () async {
-      // This test ensures that if inputs are valid, the code proceeds to call the client
-      // Since client is Fake, it throws UnimplementedError (or specific error if we mock it differently)
-      // We expect UnimplementedError here, meaning validation PASSED.
-      expect(
-        () => blogRepository.createPost(
-          title: 'Valid Title',
-          content: 'Valid Content',
-          userRole: UserRole.resident,
-        ),
-        throwsA(isA<UnimplementedError>()),
-      );
-    });
+    test(
+      'createPost proceeds (throws UnimplementedError) for valid input',
+      () async {
+        // This test ensures that if inputs are valid, the code proceeds to call the client
+        // Since client is Fake, it throws UnimplementedError (or specific error if we mock it differently)
+        // We expect UnimplementedError here, meaning validation PASSED.
+        expect(
+          () => blogRepository.createPost(
+            title: 'Valid Title',
+            content: 'Valid Content',
+            userRole: UserRole.resident,
+          ),
+          throwsA(isA<UnimplementedError>()),
+        );
+      },
+    );
   });
 }

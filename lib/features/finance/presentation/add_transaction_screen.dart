@@ -12,12 +12,15 @@ class AddTransactionScreen extends ConsumerStatefulWidget {
   const AddTransactionScreen({super.key});
 
   @override
-  ConsumerState<AddTransactionScreen> createState() => _AddTransactionScreenState();
+  ConsumerState<AddTransactionScreen> createState() =>
+      _AddTransactionScreenState();
 }
 
 class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
   final _amountController = TextEditingController(text: "250");
-  final _descriptionController = TextEditingController(text: "Cotisation Mensuelle");
+  final _descriptionController = TextEditingController(
+    text: "Cotisation Mensuelle",
+  );
   User? _selectedUser;
   String _selectedMode = "Espèces";
 
@@ -28,7 +31,13 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
     return Scaffold(
       backgroundColor: AppTheme.darkNavy,
       appBar: AppBar(
-        title: Text("NOUVEAU PAIEMENT", style: AppTheme.luxuryTheme.textTheme.headlineMedium?.copyWith(color: AppTheme.gold, fontSize: 18)),
+        title: Text(
+          "NOUVEAU PAIEMENT",
+          style: AppTheme.luxuryTheme.textTheme.headlineMedium?.copyWith(
+            color: AppTheme.gold,
+            fontSize: 18,
+          ),
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
@@ -43,20 +52,28 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                 children: [
                   // User Dropdown
                   StreamBuilder<List<User>>(
-                    stream: (db.select(db.users)..where((t) => t.role.equals('resident'))).watch(),
+                    stream: (db.select(
+                      db.users,
+                    )..where((t) => t.role.equals('resident'))).watch(),
                     builder: (context, snapshot) {
-                      if (!snapshot.hasData) return const CircularProgressIndicator();
+                      if (!snapshot.hasData)
+                        return const CircularProgressIndicator();
                       return DropdownButtonFormField<User>(
                         dropdownColor: AppTheme.darkNavy,
                         value: _selectedUser,
                         items: snapshot.data!.map((user) {
                           return DropdownMenuItem(
                             value: user,
-                            child: Text("${user.name} (Apt ${user.apartmentNumber})", style: const TextStyle(color: AppTheme.offWhite)),
+                            child: Text(
+                              "${user.name} (Apt ${user.apartmentNumber})",
+                              style: const TextStyle(color: AppTheme.offWhite),
+                            ),
                           );
                         }).toList(),
                         onChanged: (val) => setState(() => _selectedUser = val),
-                        decoration: const InputDecoration(labelText: "RÉSIDENT"),
+                        decoration: const InputDecoration(
+                          labelText: "RÉSIDENT",
+                        ),
                       );
                     },
                   ),
@@ -71,10 +88,18 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                     dropdownColor: AppTheme.darkNavy,
                     value: _selectedMode,
                     items: ["Espèces", "Chèque", "Virement"].map((mode) {
-                      return DropdownMenuItem(value: mode, child: Text(mode, style: const TextStyle(color: AppTheme.offWhite)));
+                      return DropdownMenuItem(
+                        value: mode,
+                        child: Text(
+                          mode,
+                          style: const TextStyle(color: AppTheme.offWhite),
+                        ),
+                      );
                     }).toList(),
                     onChanged: (val) => setState(() => _selectedMode = val!),
-                    decoration: const InputDecoration(labelText: "MODE DE PAIEMENT"),
+                    decoration: const InputDecoration(
+                      labelText: "MODE DE PAIEMENT",
+                    ),
                   ),
                 ],
               ),
@@ -102,9 +127,8 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
 
     final newBalance = _selectedUser!.balance + amount;
 
-    await (db.update(db.users)..where((t) => t.id.equals(_selectedUser!.id))).write(
-      UsersCompanion(balance: drift.Value(newBalance)),
-    );
+    await (db.update(db.users)..where((t) => t.id.equals(_selectedUser!.id)))
+        .write(UsersCompanion(balance: drift.Value(newBalance)));
 
     if (mounted) {
       _showSuccessDialog(amount, newBalance);
@@ -117,8 +141,14 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
       barrierDismissible: false,
       builder: (context) => AlertDialog(
         backgroundColor: AppTheme.darkNavy,
-        title: const Text("Paiement Enregistré", style: TextStyle(color: AppTheme.gold)),
-        content: const Text("La transaction a été validée avec succès.", style: TextStyle(color: AppTheme.offWhite)),
+        title: const Text(
+          "Paiement Enregistré",
+          style: TextStyle(color: AppTheme.gold),
+        ),
+        content: const Text(
+          "La transaction a été validée avec succès.",
+          style: TextStyle(color: AppTheme.offWhite),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -127,7 +157,13 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
           ElevatedButton.icon(
             style: ElevatedButton.styleFrom(backgroundColor: AppTheme.gold),
             icon: const Icon(Icons.print, color: AppTheme.darkNavy),
-            label: const Text("IMPRIMER REÇU", style: TextStyle(color: AppTheme.darkNavy, fontWeight: FontWeight.bold)),
+            label: const Text(
+              "IMPRIMER REÇU",
+              style: TextStyle(
+                color: AppTheme.darkNavy,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             onPressed: () {
               // Generate PDF
               PdfGeneratorService().generateReceipt(

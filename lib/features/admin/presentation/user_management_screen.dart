@@ -45,7 +45,10 @@ class UserManagementScreen extends ConsumerWidget {
             itemBuilder: (context, index) {
               final user = users[index];
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
                 child: LuxuryCard(
                   padding: const EdgeInsets.all(16),
                   child: Column(
@@ -76,7 +79,9 @@ class UserManagementScreen extends ConsumerWidget {
                             value: user.isBlocked,
                             activeColor: AppTheme.errorRed,
                             onChanged: (val) {
-                              (db.update(db.users)..where((t) => t.id.equals(user.id))).write(
+                              (db.update(
+                                db.users,
+                              )..where((t) => t.id.equals(user.id))).write(
                                 UsersCompanion(isBlocked: drift.Value(val)),
                               );
                             },
@@ -96,14 +101,28 @@ class UserManagementScreen extends ConsumerWidget {
                             ),
                           ),
                           TextButton.icon(
-                            icon: const Icon(Icons.refresh, size: 16, color: AppTheme.gold),
-                            label: const Text("RÉGÉNÉRER", style: TextStyle(color: AppTheme.gold, fontSize: 10)),
+                            icon: const Icon(
+                              Icons.refresh,
+                              size: 16,
+                              color: AppTheme.gold,
+                            ),
+                            label: const Text(
+                              "RÉGÉNÉRER",
+                              style: TextStyle(
+                                color: AppTheme.gold,
+                                fontSize: 10,
+                              ),
+                            ),
                             onPressed: () {
-                              (db.update(db.users)..where((t) => t.id.equals(user.id))).write(
-                                UsersCompanion(accessCode: drift.Value(_generateCode())),
+                              (db.update(
+                                db.users,
+                              )..where((t) => t.id.equals(user.id))).write(
+                                UsersCompanion(
+                                  accessCode: drift.Value(_generateCode()),
+                                ),
                               );
                             },
-                          )
+                          ),
                         ],
                       ),
                     ],

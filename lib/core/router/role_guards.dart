@@ -1,10 +1,4 @@
-enum UserRole {
-  syndic,
-  adjoint,
-  concierge,
-  resident,
-  unknown,
-}
+enum UserRole { syndic, adjoint, concierge, resident, unknown }
 
 class RoleGuards {
   static bool canEditFinance(UserRole role) {
@@ -12,7 +6,9 @@ class RoleGuards {
   }
 
   static bool canWriteIncidents(UserRole role) {
-    return role == UserRole.syndic || role == UserRole.adjoint || role == UserRole.resident;
+    return role == UserRole.syndic ||
+        role == UserRole.adjoint ||
+        role == UserRole.resident;
   }
 
   static bool canViewAllIncidents(UserRole role) {

@@ -4,17 +4,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:residence_lamandier_b/features/dashboard/presentation/widgets/apartment_grid.dart';
 
 void main() {
-  testWidgets('ApartmentGrid has correct semantics and tooltips', (WidgetTester tester) async {
+  testWidgets('ApartmentGrid has correct semantics and tooltips', (
+    WidgetTester tester,
+  ) async {
     // Build the widget
     await tester.pumpWidget(
       const MaterialApp(
-        home: Scaffold(
-          body: CustomScrollView(
-            slivers: [
-              ApartmentGrid(),
-            ],
-          ),
-        ),
+        home: Scaffold(body: CustomScrollView(slivers: [ApartmentGrid()])),
       ),
     );
 

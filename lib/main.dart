@@ -13,11 +13,7 @@ void main() async {
     anonKey: SupabaseConfig.publicKey,
   );
 
-  runApp(
-    const ProviderScope(
-      child: MainApp(),
-    ),
-  );
+  runApp(const ProviderScope(child: MainApp()));
 }
 
 class MainApp extends ConsumerWidget {

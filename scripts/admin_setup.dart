@@ -18,7 +18,9 @@ void main() async {
 
   if (serviceRoleKey == null || serviceRoleKey.isEmpty) {
     print('❌ ERROR: SUPABASE_SERVICE_ROLE_KEY not found in .env file.');
-    print('Please create a .env file with SUPABASE_SERVICE_ROLE_KEY=your_secret_key');
+    print(
+      'Please create a .env file with SUPABASE_SERVICE_ROLE_KEY=your_secret_key',
+    );
     exit(1);
   }
 
@@ -29,7 +31,9 @@ void main() async {
   // 1. EXECUTE SCHEMA (Optional/Simulated)
   // Since the Dart client doesn't support raw SQL execution for DDL without a specific RPC,
   // we assume the user has run `supabase/schema.sql` in the dashboard.
-  print('INFO: Please ensure you have executed "supabase/schema.sql" in the Supabase SQL Editor.');
+  print(
+    'INFO: Please ensure you have executed "supabase/schema.sql" in the Supabase SQL Editor.',
+  );
 
   // 2. SEED DATA (Users & Profiles)
   print('Seeding initial data...');
@@ -39,13 +43,34 @@ void main() async {
     // The dart `supabase` package supports auth admin via `client.auth.admin`.
 
     // Create SYNDIC
-    await _createUser(client, 'syndic@amandier.ma', 'password123', 'syndic', 'Syndic', 'Amandier');
+    await _createUser(
+      client,
+      'syndic@amandier.ma',
+      'password123',
+      'syndic',
+      'Syndic',
+      'Amandier',
+    );
 
     // Create ADJOINT
-    await _createUser(client, 'adjoint@amandier.ma', 'password123', 'adjoint', 'Adjoint', 'Chef');
+    await _createUser(
+      client,
+      'adjoint@amandier.ma',
+      'password123',
+      'adjoint',
+      'Adjoint',
+      'Chef',
+    );
 
     // Create CONCIERGE
-    await _createUser(client, 'concierge@amandier.ma', 'password123', 'concierge', 'Concierge', 'Gardien');
+    await _createUser(
+      client,
+      'concierge@amandier.ma',
+      'password123',
+      'concierge',
+      'Concierge',
+      'Gardien',
+    );
 
     // Create 15 RESIDENTS
     for (int i = 1; i <= 15; i++) {
@@ -57,12 +82,11 @@ void main() async {
         'Resident',
         'Apt $i',
         floor: (i - 1) ~/ 5 + 1,
-        apt: i
+        apt: i,
       );
     }
 
     print('SUCCESS: Data seeding complete.');
-
   } catch (e) {
     print('ERROR during seeding: $e');
   }
@@ -74,9 +98,10 @@ Future<void> _createUser(
   String password,
   String role,
   String firstName,
-  String lastName,
-  {int? floor, int? apt}
-) async {
+  String lastName, {
+  int? floor,
+  int? apt,
+}) async {
   try {
     // 1. Create Auth User
     final authResponse = await client.auth.admin.createUser(

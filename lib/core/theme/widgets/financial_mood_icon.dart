@@ -5,7 +5,11 @@ class FinancialMoodIcon extends StatelessWidget {
   final double monthsOfSurvival;
   final double size;
 
-  const FinancialMoodIcon({super.key, required this.monthsOfSurvival, this.size = 24.0});
+  const FinancialMoodIcon({
+    super.key,
+    required this.monthsOfSurvival,
+    this.size = 24.0,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +39,7 @@ class FinancialMoodIcon extends StatelessWidget {
       child: Semantics(
         label: semanticLabel,
         excludeSemantics: true,
-        child: Icon(
-          icon,
-          color: color,
-          size: size,
-        ),
+        child: Icon(icon, color: color, size: size),
       ),
     );
   }

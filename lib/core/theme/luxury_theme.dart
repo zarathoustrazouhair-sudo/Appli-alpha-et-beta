@@ -45,10 +45,7 @@ class AppTheme {
           fontSize: 20,
           fontWeight: FontWeight.w500,
         ),
-        bodyLarge: GoogleFonts.lato(
-          color: offWhite,
-          fontSize: 16,
-        ),
+        bodyLarge: GoogleFonts.lato(color: offWhite, fontSize: 16),
         bodyMedium: GoogleFonts.lato(
           color: offWhite.withOpacity(0.8),
           fontSize: 14,

@@ -8,6 +8,7 @@ class WizardIntent with _$WizardIntent {
   const factory WizardIntent.previousStep() = PreviousStep;
   const factory WizardIntent.updateSyndicName(String name) = UpdateSyndicName;
   const factory WizardIntent.updateAdjointName(String name) = UpdateAdjointName;
-  const factory WizardIntent.updateConciergeName(String name) = UpdateConciergeName;
+  const factory WizardIntent.updateConciergeName(String name) =
+      UpdateConciergeName;
   const factory WizardIntent.submit() = Submit;
 }

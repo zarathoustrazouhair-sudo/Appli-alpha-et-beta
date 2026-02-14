@@ -21,7 +21,9 @@ class AuthRepository {
       throw Exception("Format d'email invalide");
     }
     if (!AppValidators.isValidPassword(password)) {
-      throw Exception("Le mot de passe doit contenir au moins 8 caractères, une lettre et un chiffre");
+      throw Exception(
+        "Le mot de passe doit contenir au moins 8 caractères, une lettre et un chiffre",
+      );
     }
 
     try {
@@ -59,11 +61,16 @@ class AuthRepository {
       final roleStr = response['role'] as String?;
 
       switch (roleStr) {
-        case 'syndic': return UserRole.syndic;
-        case 'adjoint': return UserRole.adjoint;
-        case 'resident': return UserRole.resident;
-        case 'concierge': return UserRole.concierge;
-        default: return UserRole.unknown;
+        case 'syndic':
+          return UserRole.syndic;
+        case 'adjoint':
+          return UserRole.adjoint;
+        case 'resident':
+          return UserRole.resident;
+        case 'concierge':
+          return UserRole.concierge;
+        default:
+          return UserRole.unknown;
       }
     } catch (e) {
       return UserRole.unknown;

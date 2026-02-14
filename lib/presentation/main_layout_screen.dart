@@ -16,9 +16,15 @@ class _MainLayoutScreenState extends ConsumerState<MainLayoutScreen> {
 
   final List<Widget> _screens = [
     const CockpitScreen(),
-    const Center(child: Text("Résidents", style: TextStyle(color: AppTheme.gold))),
-    const Center(child: Text("Finance", style: TextStyle(color: AppTheme.gold))),
-    const Center(child: Text("Documents", style: TextStyle(color: AppTheme.gold))),
+    const Center(
+      child: Text("Résidents", style: TextStyle(color: AppTheme.gold)),
+    ),
+    const Center(
+      child: Text("Finance", style: TextStyle(color: AppTheme.gold)),
+    ),
+    const Center(
+      child: Text("Documents", style: TextStyle(color: AppTheme.gold)),
+    ),
     const BlogFeedScreen(),
   ];
 
@@ -42,7 +48,7 @@ class _MainLayoutScreenState extends ConsumerState<MainLayoutScreen> {
           IconButton(
             icon: const Icon(Icons.settings, color: AppTheme.gold),
             onPressed: () {
-               // Settings Action
+              // Settings Action
             },
           ),
           IconButton(
@@ -67,7 +73,10 @@ class _MainLayoutScreenState extends ConsumerState<MainLayoutScreen> {
           unselectedItemColor: Colors.grey,
           type: BottomNavigationBarType.fixed,
           showUnselectedLabels: true,
-          selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 10),
+          selectedLabelStyle: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 10,
+          ),
           unselectedLabelStyle: const TextStyle(fontSize: 10),
           items: const [
             BottomNavigationBarItem(
@@ -90,7 +99,7 @@ class _MainLayoutScreenState extends ConsumerState<MainLayoutScreen> {
               activeIcon: Icon(Icons.folder),
               label: 'DOCS',
             ),
-             BottomNavigationBarItem(
+            BottomNavigationBarItem(
               icon: Icon(Icons.article_outlined),
               activeIcon: Icon(Icons.article),
               label: 'BLOG',
@@ -103,12 +112,18 @@ class _MainLayoutScreenState extends ConsumerState<MainLayoutScreen> {
 
   String _getAppBarTitle(int index) {
     switch (index) {
-      case 0: return 'COCKPIT';
-      case 1: return 'RÉSIDENTS';
-      case 2: return 'FINANCE';
-      case 3: return 'DOCUMENTS';
-      case 4: return 'BLOG';
-      default: return 'AMANDIER B';
+      case 0:
+        return 'COCKPIT';
+      case 1:
+        return 'RÉSIDENTS';
+      case 2:
+        return 'FINANCE';
+      case 3:
+        return 'DOCUMENTS';
+      case 4:
+        return 'BLOG';
+      default:
+        return 'AMANDIER B';
     }
   }
 }

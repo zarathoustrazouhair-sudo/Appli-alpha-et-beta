@@ -17,8 +17,12 @@ class _ResidentShellState extends ConsumerState<ResidentShell> {
   final List<Widget> _screens = [
     const MyApartmentScreen(),
     const BlogFeedScreen(),
-    const Center(child: Text("Documents", style: TextStyle(color: AppTheme.gold))),
-    const Center(child: Text("Profile", style: TextStyle(color: AppTheme.gold))),
+    const Center(
+      child: Text("Documents", style: TextStyle(color: AppTheme.gold)),
+    ),
+    const Center(
+      child: Text("Profile", style: TextStyle(color: AppTheme.gold)),
+    ),
   ];
 
   @override
@@ -44,17 +48,17 @@ class _ResidentShellState extends ConsumerState<ResidentShell> {
               activeIcon: Icon(Icons.home),
               label: 'MON APPART',
             ),
-             BottomNavigationBarItem(
+            BottomNavigationBarItem(
               icon: Icon(Icons.article_outlined),
               activeIcon: Icon(Icons.article),
               label: 'ACTUALITÉS',
             ),
-             BottomNavigationBarItem(
+            BottomNavigationBarItem(
               icon: Icon(Icons.folder_open),
               activeIcon: Icon(Icons.folder),
               label: 'DOCS',
             ),
-             BottomNavigationBarItem(
+            BottomNavigationBarItem(
               icon: Icon(Icons.person_outline),
               activeIcon: Icon(Icons.person),
               label: 'PROFIL',
@@ -132,7 +136,11 @@ class MyApartmentScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const Icon(Icons.check_circle_outline, color: Color(0xFF00E5FF), size: 40),
+                  const Icon(
+                    Icons.check_circle_outline,
+                    color: Color(0xFF00E5FF),
+                    size: 40,
+                  ),
                 ],
               ),
             ),
@@ -165,27 +173,30 @@ class MyApartmentScreen extends StatelessWidget {
                 ),
               ),
             ),
-             const SizedBox(height: 32),
+            const SizedBox(height: 32),
 
-             // Recent Blog Posts Preview (Header)
-             Row(
-               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-               children: [
-                 Text(
-                   "DERNIÈRES ACTUALITÉS",
-                   style: TextStyle(
-                     color: AppTheme.offWhite.withOpacity(0.8),
-                     fontSize: 14,
-                     fontWeight: FontWeight.bold,
-                   ),
-                 ),
-                 TextButton(
-                   onPressed: () {},
-                   child: const Text("Voir tout", style: TextStyle(color: AppTheme.gold)),
-                 ),
-               ],
-             ),
-             // Note: In a real app, we'd list a few items here.
+            // Recent Blog Posts Preview (Header)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "DERNIÈRES ACTUALITÉS",
+                  style: TextStyle(
+                    color: AppTheme.offWhite.withOpacity(0.8),
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: const Text(
+                    "Voir tout",
+                    style: TextStyle(color: AppTheme.gold),
+                  ),
+                ),
+              ],
+            ),
+            // Note: In a real app, we'd list a few items here.
           ],
         ),
       ),
@@ -194,7 +205,13 @@ class MyApartmentScreen extends StatelessWidget {
           // Report Incident
         },
         backgroundColor: AppTheme.gold,
-        label: const Text("SIGNALER INCIDENT", style: TextStyle(color: AppTheme.darkNavy, fontWeight: FontWeight.bold)),
+        label: const Text(
+          "SIGNALER INCIDENT",
+          style: TextStyle(
+            color: AppTheme.darkNavy,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         icon: const Icon(Icons.build, color: AppTheme.darkNavy),
       ),
     );

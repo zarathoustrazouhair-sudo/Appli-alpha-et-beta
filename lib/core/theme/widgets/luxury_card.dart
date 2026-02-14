@@ -31,10 +31,7 @@ class LuxuryCard extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
-          side: BorderSide(
-            color: AppTheme.gold.withOpacity(0.3),
-            width: 1,
-          ),
+          side: BorderSide(color: AppTheme.gold.withOpacity(0.3), width: 1),
         ),
         child: Semantics(
           button: onTap != null,
@@ -43,10 +40,7 @@ class LuxuryCard extends StatelessWidget {
             onTap: onTap,
             splashColor: AppTheme.gold.withOpacity(0.1),
             highlightColor: AppTheme.gold.withOpacity(0.05),
-            child: Padding(
-              padding: padding,
-              child: child,
-            ),
+            child: Padding(padding: padding, child: child),
           ),
         ),
       ),

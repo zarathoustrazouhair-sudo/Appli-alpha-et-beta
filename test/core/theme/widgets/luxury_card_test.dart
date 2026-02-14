@@ -8,11 +8,7 @@ void main() {
     testWidgets('Renders child content correctly', (WidgetTester tester) async {
       await tester.pumpWidget(
         const MaterialApp(
-          home: Scaffold(
-            body: LuxuryCard(
-              child: Text('Test Content'),
-            ),
-          ),
+          home: Scaffold(body: LuxuryCard(child: Text('Test Content'))),
         ),
       );
 
@@ -33,15 +29,19 @@ void main() {
       );
 
       final paddingWidget = tester.widget<Padding>(
-        find.ancestor(
-          of: find.text('Test Content'),
-          matching: find.byType(Padding),
-        ).first,
+        find
+            .ancestor(
+              of: find.text('Test Content'),
+              matching: find.byType(Padding),
+            )
+            .first,
       );
       expect(paddingWidget.padding, customPadding);
     });
 
-    testWidgets('Responds to tap when onTap is provided', (WidgetTester tester) async {
+    testWidgets('Responds to tap when onTap is provided', (
+      WidgetTester tester,
+    ) async {
       bool tapped = false;
       await tester.pumpWidget(
         MaterialApp(
@@ -62,7 +62,9 @@ void main() {
       expect(tapped, isTrue);
     });
 
-    testWidgets('Has accessibility traits when interactive', (WidgetTester tester) async {
+    testWidgets('Has accessibility traits when interactive', (
+      WidgetTester tester,
+    ) async {
       final handle = tester.ensureSemantics();
 
       await tester.pumpWidget(
@@ -80,24 +82,34 @@ void main() {
       final semantics = tester.getSemantics(find.byType(InkWell));
       final data = semantics.getSemanticsData();
 
-      expect(data.hasFlag(SemanticsFlag.isButton), isTrue, reason: 'Should be a button');
-      expect(data.hasAction(SemanticsAction.tap), isTrue, reason: 'Should be tappable');
-      expect(data.hasFlag(SemanticsFlag.isFocusable), isTrue, reason: 'Should be focusable');
+      expect(
+        data.hasFlag(SemanticsFlag.isButton),
+        isTrue,
+        reason: 'Should be a button',
+      );
+      expect(
+        data.hasAction(SemanticsAction.tap),
+        isTrue,
+        reason: 'Should be tappable',
+      );
+      expect(
+        data.hasFlag(SemanticsFlag.isFocusable),
+        isTrue,
+        reason: 'Should be focusable',
+      );
       expect(data.label, 'Interactive Card');
 
       handle.dispose();
     });
 
-    testWidgets('Does NOT have button trait when NOT interactive', (WidgetTester tester) async {
+    testWidgets('Does NOT have button trait when NOT interactive', (
+      WidgetTester tester,
+    ) async {
       final handle = tester.ensureSemantics();
 
       await tester.pumpWidget(
         const MaterialApp(
-          home: Scaffold(
-            body: LuxuryCard(
-              child: Text('Static Card'),
-            ),
-          ),
+          home: Scaffold(body: LuxuryCard(child: Text('Static Card'))),
         ),
       );
 
@@ -105,10 +117,22 @@ void main() {
       final semantics = tester.getSemantics(find.byType(InkWell));
       final data = semantics.getSemanticsData();
 
-      expect(data.hasFlag(SemanticsFlag.isButton), isFalse, reason: 'Should NOT be a button');
-      expect(data.hasAction(SemanticsAction.tap), isFalse, reason: 'Should NOT be tappable');
+      expect(
+        data.hasFlag(SemanticsFlag.isButton),
+        isFalse,
+        reason: 'Should NOT be a button',
+      );
+      expect(
+        data.hasAction(SemanticsAction.tap),
+        isFalse,
+        reason: 'Should NOT be tappable',
+      );
       expect(data.label, 'Static Card');
-      expect(data.hasFlag(SemanticsFlag.isEnabled), isFalse, reason: 'Should be disabled');
+      expect(
+        data.hasFlag(SemanticsFlag.isEnabled),
+        isFalse,
+        reason: 'Should be disabled',
+      );
 
       handle.dispose();
     });

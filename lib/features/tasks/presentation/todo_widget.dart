@@ -54,7 +54,9 @@ class _TodoWidgetState extends ConsumerState<TodoWidget> {
                   style: const TextStyle(color: AppTheme.offWhite),
                   decoration: InputDecoration(
                     hintText: "Nouvelle tâche...",
-                    hintStyle: TextStyle(color: AppTheme.offWhite.withOpacity(0.5)),
+                    hintStyle: TextStyle(
+                      color: AppTheme.offWhite.withOpacity(0.5),
+                    ),
                     filled: true,
                     fillColor: Colors.black26,
                     border: OutlineInputBorder(
@@ -69,7 +71,9 @@ class _TodoWidgetState extends ConsumerState<TodoWidget> {
                 label: "ADD",
                 onPressed: () {
                   if (_controller.text.isNotEmpty) {
-                    ref.read(tasksViewModelProvider.notifier).addTask(_controller.text);
+                    ref
+                        .read(tasksViewModelProvider.notifier)
+                        .addTask(_controller.text);
                     _controller.clear();
                   }
                 },
@@ -84,7 +88,10 @@ class _TodoWidgetState extends ConsumerState<TodoWidget> {
               data: (tasks) {
                 if (tasks.isEmpty) {
                   return const Center(
-                    child: Text("Aucune tâche.", style: TextStyle(color: Colors.grey)),
+                    child: Text(
+                      "Aucune tâche.",
+                      style: TextStyle(color: Colors.grey),
+                    ),
                   );
                 }
                 return ListView.builder(
@@ -97,14 +104,20 @@ class _TodoWidgetState extends ConsumerState<TodoWidget> {
                         activeColor: AppTheme.gold,
                         checkColor: AppTheme.darkNavy,
                         onChanged: (val) {
-                          ref.read(tasksViewModelProvider.notifier).toggleTask(task.id, val ?? false);
+                          ref
+                              .read(tasksViewModelProvider.notifier)
+                              .toggleTask(task.id, val ?? false);
                         },
                       ),
                       title: Text(
                         task.description,
                         style: TextStyle(
-                          color: task.isCompleted ? Colors.grey : AppTheme.offWhite,
-                          decoration: task.isCompleted ? TextDecoration.lineThrough : null,
+                          color: task.isCompleted
+                              ? Colors.grey
+                              : AppTheme.offWhite,
+                          decoration: task.isCompleted
+                              ? TextDecoration.lineThrough
+                              : null,
                         ),
                       ),
                     );
@@ -112,7 +125,10 @@ class _TodoWidgetState extends ConsumerState<TodoWidget> {
                 );
               },
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (err, stack) => Text("Error: $err", style: const TextStyle(color: Colors.red)),
+              error: (err, stack) => Text(
+                "Error: $err",
+                style: const TextStyle(color: Colors.red),
+              ),
             ),
           ),
         ],

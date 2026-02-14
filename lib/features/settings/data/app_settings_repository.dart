@@ -16,13 +16,17 @@ class AppSettingsRepository {
   AppSettingsRepository(this._db);
 
   Future<void> saveSetting(String key, String value) async {
-    await _db.into(_db.appSettings).insertOnConflictUpdate(
-      AppSettingsCompanion.insert(key: key, value: value),
-    );
+    await _db
+        .into(_db.appSettings)
+        .insertOnConflictUpdate(
+          AppSettingsCompanion.insert(key: key, value: value),
+        );
   }
 
   Future<String?> getSetting(String key) async {
-    final result = await (_db.select(_db.appSettings)..where((t) => t.key.equals(key))).getSingleOrNull();
+    final result = await (_db.select(
+      _db.appSettings,
+    )..where((t) => t.key.equals(key))).getSingleOrNull();
     return result?.value;
   }
 

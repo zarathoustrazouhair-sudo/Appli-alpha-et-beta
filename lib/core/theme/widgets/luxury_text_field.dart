@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:residence_lamandier_b/core/theme/luxury_theme.dart';
 
 class LuxuryTextField extends StatefulWidget {
@@ -13,6 +14,7 @@ class LuxuryTextField extends StatefulWidget {
   final bool autofocus;
   final TextInputAction? textInputAction;
   final ValueChanged<String>? onFieldSubmitted;
+  final FocusNode? focusNode;
 
   const LuxuryTextField({
     super.key,
@@ -27,6 +29,7 @@ class LuxuryTextField extends StatefulWidget {
     this.autofocus = false,
     this.textInputAction,
     this.onFieldSubmitted,
+    this.focusNode,
   });
 
   @override
@@ -36,9 +39,13 @@ class LuxuryTextField extends StatefulWidget {
 class _LuxuryTextFieldState extends State<LuxuryTextField> {
   late TextEditingController _internalController;
   late bool _isObscured;
+  FocusNode? _internalFocusNode;
 
   TextEditingController get _effectiveController =>
       widget.controller ?? _internalController;
+
+  FocusNode get _effectiveFocusNode =>
+      widget.focusNode ?? (_internalFocusNode ??= FocusNode());
 
   @override
   void initState() {
@@ -54,6 +61,7 @@ class _LuxuryTextFieldState extends State<LuxuryTextField> {
   @override
   void dispose() {
     _internalController.dispose();
+    _internalFocusNode?.dispose();
     super.dispose();
   }
 
@@ -76,6 +84,7 @@ class _LuxuryTextFieldState extends State<LuxuryTextField> {
           valueListenable: _effectiveController,
           builder: (context, value, child) {
             return TextFormField(
+              focusNode: _effectiveFocusNode,
               autofocus: widget.autofocus,
               textInputAction: widget.textInputAction,
               onFieldSubmitted: widget.onFieldSubmitted,
@@ -104,7 +113,10 @@ class _LuxuryTextFieldState extends State<LuxuryTextField> {
                 ),
                 errorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: AppTheme.errorRed, width: 1),
+                  borderSide: const BorderSide(
+                    color: AppTheme.errorRed,
+                    width: 1,
+                  ),
                 ),
                 suffixIcon: _buildSuffixIcon(value.text.isNotEmpty),
               ),
@@ -122,8 +134,11 @@ class _LuxuryTextFieldState extends State<LuxuryTextField> {
           _isObscured ? Icons.visibility : Icons.visibility_off,
           color: AppTheme.gold.withOpacity(0.7),
         ),
-        tooltip: _isObscured ? 'Afficher le mot de passe' : 'Masquer le mot de passe',
+        tooltip: _isObscured
+            ? 'Afficher le mot de passe'
+            : 'Masquer le mot de passe',
         onPressed: () {
+          HapticFeedback.selectionClick();
           setState(() {
             _isObscured = !_isObscured;
           });
@@ -138,8 +153,10 @@ class _LuxuryTextFieldState extends State<LuxuryTextField> {
         ),
         tooltip: 'Effacer le texte',
         onPressed: () {
+          HapticFeedback.mediumImpact();
           _effectiveController.clear();
           widget.onChanged?.call('');
+          _effectiveFocusNode.requestFocus();
         },
       );
     }
