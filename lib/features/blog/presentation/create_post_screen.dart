@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as p;
 import 'package:residence_lamandier_b/core/theme/app_palettes.dart';
 import 'package:residence_lamandier_b/core/theme/widgets/luxury_button.dart';
 import 'package:residence_lamandier_b/core/theme/widgets/luxury_text_field.dart'; // Keep generic text field for inputs
@@ -27,21 +29,28 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
-      // Compress Image (Max 1920x1080, 85%)
-      final compressedBytes = await FlutterImageCompress.compressWithFile(
+      // Optimization: Compress image to avoid uploading large files
+      // This reduces bandwidth usage and upload time significantly.
+      final tempDir = await getTemporaryDirectory();
+      final targetPath =
+          p.join(tempDir.path, '${DateTime.now().millisecondsSinceEpoch}.jpg');
+
+      final compressedFile = await FlutterImageCompress.compressAndGetFile(
         pickedFile.path,
+        targetPath,
         minWidth: 1920,
         minHeight: 1080,
         quality: 85,
       );
 
-      // In a real scenario, we'd save bytes to a temp file.
-      // For simplicity here, we just use the original file if compression succeeds in logic
-      // Ideally, write compressedBytes to a new File path.
-
-      setState(() {
-        _imageFile = File(pickedFile.path);
-      });
+      if (mounted) {
+        setState(() {
+          // Use compressed file if available, otherwise fallback to original
+          _imageFile = compressedFile != null
+              ? File(compressedFile.path)
+              : File(pickedFile.path);
+        });
+      }
     }
   }
 
