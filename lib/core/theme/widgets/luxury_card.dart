@@ -15,17 +15,9 @@ class LuxuryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final card = Container(
-      padding: padding,
+    return Container(
       decoration: BoxDecoration(
-        // Optimization: Use opaque color to avoid expensive alpha blending.
-        // Visually identical since background is also darkNavy.
-        color: AppTheme.darkNavy,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: AppTheme.gold.withOpacity(0.3),
-          width: 1,
-        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.5),
@@ -34,15 +26,30 @@ class LuxuryCard extends StatelessWidget {
           ),
         ],
       ),
-      child: child,
+      child: Material(
+        color: AppTheme.darkNavy,
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide(
+            color: AppTheme.gold.withOpacity(0.3),
+            width: 1,
+          ),
+        ),
+        child: Semantics(
+          button: onTap != null,
+          enabled: onTap != null,
+          child: InkWell(
+            onTap: onTap,
+            splashColor: AppTheme.gold.withOpacity(0.1),
+            highlightColor: AppTheme.gold.withOpacity(0.05),
+            child: Padding(
+              padding: padding,
+              child: child,
+            ),
+          ),
+        ),
+      ),
     );
-
-    if (onTap != null) {
-      return GestureDetector(
-        onTap: onTap,
-        child: card,
-      );
-    }
-    return card;
   }
 }
