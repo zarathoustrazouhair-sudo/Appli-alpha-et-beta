@@ -47,8 +47,12 @@ class CashflowCurve extends StatelessWidget {
                 ),
                 titlesData: FlTitlesData(
                   show: true,
-                  rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  rightTitles: AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  topTitles: AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
                   bottomTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
@@ -150,10 +154,7 @@ class CashflowCurve extends StatelessWidget {
         break;
     }
 
-    return SideTitleWidget(
-      axisSide: meta.axisSide,
-      child: text,
-    );
+    return SideTitleWidget(axisSide: meta.axisSide, child: text);
   }
 
   Widget leftTitleWidgets(double value, TitleMeta meta) {

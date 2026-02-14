@@ -31,21 +31,23 @@ class SyncManager {
     required String type,
     required String payloadJson,
   }) async {
-    await _db.into(_db.mutationQueue).insert(
-      MutationQueueCompanion.insert(
-        type: type,
-        payloadJson: payloadJson,
-        status: const Value('pending'),
-      ),
-    );
+    await _db
+        .into(_db.mutationQueue)
+        .insert(
+          MutationQueueCompanion.insert(
+            type: type,
+            payloadJson: payloadJson,
+            status: const Value('pending'),
+          ),
+        );
     // Try to process immediately if connected
     processQueue();
   }
 
   Future<void> processQueue() async {
-    final pending = await (_db.select(_db.mutationQueue)
-      ..where((tbl) => tbl.status.equals('pending')))
-      .get();
+    final pending = await (_db.select(
+      _db.mutationQueue,
+    )..where((tbl) => tbl.status.equals('pending'))).get();
 
     if (pending.isEmpty) return;
 
@@ -58,18 +60,19 @@ class SyncManager {
         await _executeMutation(item);
 
         // Success: Mark as completed or Delete
-        await (_db.delete(_db.mutationQueue)
-          ..where((tbl) => tbl.id.equals(item.id)))
-          .go();
-
+        await (_db.delete(
+          _db.mutationQueue,
+        )..where((tbl) => tbl.id.equals(item.id))).go();
       } catch (e) {
         // Failure: Increment retry count
-        await (_db.update(_db.mutationQueue)
-          ..where((tbl) => tbl.id.equals(item.id)))
-          .write(MutationQueueCompanion(
+        await (_db.update(
+          _db.mutationQueue,
+        )..where((tbl) => tbl.id.equals(item.id))).write(
+          MutationQueueCompanion(
             retryCount: Value(item.retryCount + 1),
             // Optionally set status to 'failed' after N retries
-          ));
+          ),
+        );
         // Stop processing to preserve order/consistency if needed, or continue
       }
     }

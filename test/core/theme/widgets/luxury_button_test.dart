@@ -8,10 +8,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: LuxuryButton(
-              label: 'Test Button',
-              onPressed: () {},
-            ),
+            body: LuxuryButton(label: 'Test Button', onPressed: () {}),
           ),
         ),
       );
@@ -20,7 +17,9 @@ void main() {
       expect(find.byType(CircularProgressIndicator), findsNothing);
     });
 
-    testWidgets('Displays loader in loading state', (WidgetTester tester) async {
+    testWidgets('Displays loader in loading state', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -37,7 +36,9 @@ void main() {
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
 
-    testWidgets('Has semantic label in loading state', (WidgetTester tester) async {
+    testWidgets('Has semantic label in loading state', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(

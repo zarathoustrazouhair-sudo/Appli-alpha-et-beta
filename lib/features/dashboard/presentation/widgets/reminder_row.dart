@@ -43,7 +43,10 @@ class ReminderRow extends ConsumerWidget {
                         ),
                       ),
                       loading: () => const SizedBox(
-                          height: 24, width: 24, child: CircularProgressIndicator()),
+                        height: 24,
+                        width: 24,
+                        child: CircularProgressIndicator(),
+                      ),
                       error: (_, __) => const Text("?"),
                     ),
                   ],
@@ -84,7 +87,10 @@ class ReminderRow extends ConsumerWidget {
                     ),
                   ],
                 ),
-                Icon(Icons.warning_amber_rounded, color: AppTheme.errorRed.withOpacity(0.8)),
+                Icon(
+                  Icons.warning_amber_rounded,
+                  color: AppTheme.errorRed.withOpacity(0.8),
+                ),
               ],
             ),
           ),

@@ -33,12 +33,21 @@ class ConciergeShell extends StatelessWidget {
                 children: [
                   Text(
                     "TÂCHES DU JOUR",
-                    style: TextStyle(color: AppTheme.offWhite.withOpacity(0.6), fontSize: 12, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      color: AppTheme.offWhite.withOpacity(0.6),
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 16),
                   Text(
                     "3",
-                    style: TextStyle(color: AppTheme.gold, fontSize: 48, fontWeight: FontWeight.bold, fontFamily: 'Playfair Display'),
+                    style: TextStyle(
+                      color: AppTheme.gold,
+                      fontSize: 48,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Playfair Display',
+                    ),
                   ),
                 ],
               ),
@@ -46,7 +55,11 @@ class ConciergeShell extends StatelessWidget {
             const SizedBox(height: 24),
             Text(
               "LISTE DES TÂCHES",
-              style: TextStyle(color: AppTheme.offWhite.withOpacity(0.8), fontSize: 14, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                color: AppTheme.offWhite.withOpacity(0.8),
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 12),
             // Mock Task List
@@ -75,7 +88,9 @@ class ConciergeShell extends StatelessWidget {
               child: Text(
                 title,
                 style: TextStyle(
-                  color: isCompleted ? AppTheme.offWhite.withOpacity(0.5) : AppTheme.offWhite,
+                  color: isCompleted
+                      ? AppTheme.offWhite.withOpacity(0.5)
+                      : AppTheme.offWhite,
                   decoration: isCompleted ? TextDecoration.lineThrough : null,
                 ),
               ),

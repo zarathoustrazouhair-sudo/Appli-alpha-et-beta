@@ -34,8 +34,15 @@ class BlogFeedScreen extends ConsumerWidget {
             );
           },
         ),
-        loading: () => const Center(child: CircularProgressIndicator(color: AppPalettes.gold)),
-        error: (err, stack) => Center(child: Text("Erreur: $err", style: const TextStyle(color: AppPalettes.red))),
+        loading: () => const Center(
+          child: CircularProgressIndicator(color: AppPalettes.gold),
+        ),
+        error: (err, stack) => Center(
+          child: Text(
+            "Erreur: $err",
+            style: const TextStyle(color: AppPalettes.red),
+          ),
+        ),
       ),
       floatingActionButton: userRole != UserRole.concierge
           ? FloatingActionButton(
@@ -63,13 +70,30 @@ class BlogFeedScreen extends ConsumerWidget {
             padding: const EdgeInsets.all(12),
             child: Row(
               children: [
-                const CircleAvatar(backgroundColor: AppPalettes.gold, radius: 16, child: Icon(Icons.person, size: 16, color: AppPalettes.navy)),
+                const CircleAvatar(
+                  backgroundColor: AppPalettes.gold,
+                  radius: 16,
+                  child: Icon(Icons.person, size: 16, color: AppPalettes.navy),
+                ),
                 const SizedBox(width: 12),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(post.author, style: const TextStyle(color: AppPalettes.offWhite, fontWeight: FontWeight.bold, fontSize: 14)),
-                    Text(timeago.format(post.createdAt), style: TextStyle(color: AppPalettes.offWhite.withOpacity(0.5), fontSize: 10)),
+                    Text(
+                      post.author,
+                      style: const TextStyle(
+                        color: AppPalettes.offWhite,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
+                    Text(
+                      timeago.format(post.createdAt),
+                      style: TextStyle(
+                        color: AppPalettes.offWhite.withOpacity(0.5),
+                        fontSize: 10,
+                      ),
+                    ),
                   ],
                 ),
               ],
@@ -80,14 +104,29 @@ class BlogFeedScreen extends ConsumerWidget {
             CachedNetworkImage(
               imageUrl: post.imageUrl!,
               height: 250,
-              memCacheHeight: 1000, // Optimize memory usage (approx 4x display height)
+              memCacheHeight:
+                  1000, // Optimize memory usage (approx 4x display height)
               width: double.infinity,
               fit: BoxFit.cover,
-              placeholder: (context, url) => Container(height: 250, color: Colors.black26, child: const Center(child: CircularProgressIndicator())),
-              errorWidget: (context, url, error) => Container(height: 250, color: Colors.black26, child: const Icon(Icons.error)),
+              placeholder: (context, url) => Container(
+                height: 250,
+                color: Colors.black26,
+                child: const Center(child: CircularProgressIndicator()),
+              ),
+              errorWidget: (context, url, error) => Container(
+                height: 250,
+                color: Colors.black26,
+                child: const Icon(Icons.error),
+              ),
             )
           else
-             Container(height: 150, color: Colors.black26, child: const Center(child: Icon(Icons.article, size: 48, color: Colors.grey))),
+            Container(
+              height: 150,
+              color: Colors.black26,
+              child: const Center(
+                child: Icon(Icons.article, size: 48, color: Colors.grey),
+              ),
+            ),
 
           // Content
           Padding(
@@ -110,7 +149,11 @@ class BlogFeedScreen extends ConsumerWidget {
                   post.content,
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(color: AppPalettes.offWhite, fontSize: 14, height: 1.5),
+                  style: const TextStyle(
+                    color: AppPalettes.offWhite,
+                    fontSize: 14,
+                    height: 1.5,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 LuxuryButton(
@@ -118,7 +161,9 @@ class BlogFeedScreen extends ConsumerWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => PostDetailScreen(post: post)),
+                      MaterialPageRoute(
+                        builder: (_) => PostDetailScreen(post: post),
+                      ),
                     );
                   },
                 ),
@@ -132,6 +177,9 @@ class BlogFeedScreen extends ConsumerWidget {
 }
 
 // Simple provider wrapper for fetching posts
-final blogPostsProvider = FutureProvider.family<List<PostEntity>, UserRole>((ref, role) async {
+final blogPostsProvider = FutureProvider.family<List<PostEntity>, UserRole>((
+  ref,
+  role,
+) async {
   return ref.watch(blogRepositoryProvider).getPosts(userRole: role);
 });

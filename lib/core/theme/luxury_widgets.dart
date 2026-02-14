@@ -23,10 +23,7 @@ class LuxuryCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppPalettes.navy.withOpacity(withBlur ? 0.7 : 0.9),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: AppPalettes.gold.withOpacity(0.3),
-          width: 1,
-        ),
+        border: Border.all(color: AppPalettes.gold.withOpacity(0.3), width: 1),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.5),
@@ -51,10 +48,7 @@ class LuxuryCard extends StatelessWidget {
     );
 
     if (onTap != null) {
-      return GestureDetector(
-        onTap: onTap,
-        child: cardContent,
-      );
+      return GestureDetector(onTap: onTap, child: cardContent);
     }
     return cardContent;
   }
@@ -138,21 +132,41 @@ class StatusBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     // Divine (> 6 months)
     if (monthsOfSurvival > 6) {
-      return const Icon(Icons.workspace_premium, color: AppPalettes.gold, size: 24);
+      return const Icon(
+        Icons.workspace_premium,
+        color: AppPalettes.gold,
+        size: 24,
+      );
     }
     // Healthy (> 3 months)
     if (monthsOfSurvival > 3) {
-      return const Icon(Icons.sentiment_very_satisfied, color: AppPalettes.green, size: 24);
+      return const Icon(
+        Icons.sentiment_very_satisfied,
+        color: AppPalettes.green,
+        size: 24,
+      );
     }
     // Stable (> 1 month)
     if (monthsOfSurvival > 1) {
-      return const Icon(Icons.sentiment_satisfied, color: AppPalettes.green, size: 24);
+      return const Icon(
+        Icons.sentiment_satisfied,
+        color: AppPalettes.green,
+        size: 24,
+      );
     }
     // Warning (> 0)
     if (monthsOfSurvival > 0) {
-      return const Icon(Icons.sentiment_neutral, color: Colors.orange, size: 24);
+      return const Icon(
+        Icons.sentiment_neutral,
+        color: Colors.orange,
+        size: 24,
+      );
     }
     // Critical (< 0)
-    return const Icon(Icons.warning_amber_rounded, color: AppPalettes.red, size: 24);
+    return const Icon(
+      Icons.warning_amber_rounded,
+      color: AppPalettes.red,
+      size: 24,
+    );
   }
 }

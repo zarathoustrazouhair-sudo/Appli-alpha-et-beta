@@ -74,10 +74,15 @@ class CockpitScreen extends ConsumerWidget {
           ),
           const SliverPadding(
             padding: EdgeInsets.symmetric(horizontal: 16.0),
-            sliver: ApartmentGrid(), // Updated internally to use StatusBadge or logic if needed
+            sliver:
+                ApartmentGrid(), // Updated internally to use StatusBadge or logic if needed
           ),
           SliverPadding(
-            padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0),
+            padding: const EdgeInsets.only(
+              left: 16.0,
+              right: 16.0,
+              bottom: 8.0,
+            ),
             sliver: SliverToBoxAdapter(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

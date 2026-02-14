@@ -10,16 +10,17 @@ class TasksViewModel extends _$TasksViewModel {
   @override
   Stream<List<Task>> build() {
     final db = ref.watch(appDatabaseProvider);
-    return (db.select(db.tasks)
-          ..orderBy([(t) => OrderingTerm(expression: t.createdAt, mode: OrderingMode.desc)]))
+    return (db.select(db.tasks)..orderBy([
+          (t) => OrderingTerm(expression: t.createdAt, mode: OrderingMode.desc),
+        ]))
         .watch();
   }
 
   Future<void> addTask(String description) async {
     final db = ref.read(appDatabaseProvider);
-    await db.into(db.tasks).insert(
-          TasksCompanion.insert(description: description),
-        );
+    await db
+        .into(db.tasks)
+        .insert(TasksCompanion.insert(description: description));
   }
 
   Future<void> toggleTask(int id, bool isCompleted) async {

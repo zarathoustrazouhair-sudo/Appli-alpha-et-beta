@@ -91,7 +91,9 @@ class _WizardScreenState extends ConsumerState<WizardScreen> {
                 if (state.currentStep > 0)
                   LuxuryButton(
                     label: 'BACK',
-                    onPressed: () => viewModel.processIntent(const WizardIntent.previousStep()),
+                    onPressed: () => viewModel.processIntent(
+                      const WizardIntent.previousStep(),
+                    ),
                   )
                 else
                   const SizedBox.shrink(),
@@ -134,10 +136,12 @@ class _WizardScreenState extends ConsumerState<WizardScreen> {
                 label: 'FULL NAME',
                 hint: 'Enter Syndic Name',
                 controller: _syndicController,
-                onChanged: (val) => viewModel.processIntent(WizardIntent.updateSyndicName(val)),
+                onChanged: (val) =>
+                    viewModel.processIntent(WizardIntent.updateSyndicName(val)),
                 autofocus: true,
                 textInputAction: TextInputAction.next,
-                onFieldSubmitted: (_) => viewModel.processIntent(const WizardIntent.nextStep()),
+                onFieldSubmitted: (_) =>
+                    viewModel.processIntent(const WizardIntent.nextStep()),
               ),
             ],
           ),
@@ -158,10 +162,13 @@ class _WizardScreenState extends ConsumerState<WizardScreen> {
                 label: 'FULL NAME',
                 hint: 'Enter Adjoint Name',
                 controller: _adjointController,
-                onChanged: (val) => viewModel.processIntent(WizardIntent.updateAdjointName(val)),
+                onChanged: (val) => viewModel.processIntent(
+                  WizardIntent.updateAdjointName(val),
+                ),
                 autofocus: true,
                 textInputAction: TextInputAction.next,
-                onFieldSubmitted: (_) => viewModel.processIntent(const WizardIntent.nextStep()),
+                onFieldSubmitted: (_) =>
+                    viewModel.processIntent(const WizardIntent.nextStep()),
               ),
             ],
           ),
@@ -182,10 +189,13 @@ class _WizardScreenState extends ConsumerState<WizardScreen> {
                 label: 'FULL NAME',
                 hint: 'Enter Concierge Name',
                 controller: _conciergeController,
-                onChanged: (val) => viewModel.processIntent(WizardIntent.updateConciergeName(val)),
+                onChanged: (val) => viewModel.processIntent(
+                  WizardIntent.updateConciergeName(val),
+                ),
                 autofocus: true,
                 textInputAction: TextInputAction.done,
-                onFieldSubmitted: (_) => viewModel.processIntent(const WizardIntent.submit()),
+                onFieldSubmitted: (_) =>
+                    viewModel.processIntent(const WizardIntent.submit()),
               ),
             ],
           ),

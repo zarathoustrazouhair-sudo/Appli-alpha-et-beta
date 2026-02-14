@@ -10,7 +10,8 @@ class AppParametersScreen extends ConsumerStatefulWidget {
   const AppParametersScreen({super.key});
 
   @override
-  ConsumerState<AppParametersScreen> createState() => _AppParametersScreenState();
+  ConsumerState<AppParametersScreen> createState() =>
+      _AppParametersScreenState();
 }
 
 class _AppParametersScreenState extends ConsumerState<AppParametersScreen> {
@@ -43,9 +44,9 @@ class _AppParametersScreenState extends ConsumerState<AppParametersScreen> {
     await repo.saveSetting('monthly_fee', _feeController.text);
     await repo.saveSetting('syndic_name', _syndicNameController.text);
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Paramètres sauvegardés')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Paramètres sauvegardés')));
     }
   }
 

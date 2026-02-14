@@ -52,7 +52,11 @@ class BlockedUserScreen extends StatelessWidget {
                     const Divider(color: Colors.grey, height: 32),
                     const Text(
                       "RIB POUR RÉGULARISATION",
-                      style: TextStyle(color: AppTheme.gold, fontSize: 12, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        color: AppTheme.gold,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     const SelectableText(

@@ -8,10 +8,7 @@ void main() {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
-            body: LuxuryTextField(
-              label: 'Test Label',
-              autofocus: true,
-            ),
+            body: LuxuryTextField(label: 'Test Label', autofocus: true),
           ),
         ),
       );
@@ -24,7 +21,9 @@ void main() {
       expect(textField.autofocus, isTrue);
     });
 
-    testWidgets('onFieldSubmitted callback is triggered', (WidgetTester tester) async {
+    testWidgets('onFieldSubmitted callback is triggered', (
+      WidgetTester tester,
+    ) async {
       String? submittedValue;
 
       await tester.pumpWidget(
@@ -49,7 +48,9 @@ void main() {
       expect(submittedValue, 'Test Value');
     });
 
-    testWidgets('textInputAction is passed to TextField', (WidgetTester tester) async {
+    testWidgets('textInputAction is passed to TextField', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
@@ -65,8 +66,47 @@ void main() {
       expect(textField.textInputAction, TextInputAction.next);
     });
 
-    testWidgets('Clear button appears when text is entered and clears text on tap', (WidgetTester tester) async {
+    testWidgets(
+      'Clear button appears when text is entered and clears text on tap',
+      (WidgetTester tester) async {
+        final controller = TextEditingController();
+
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: LuxuryTextField(
+                label: 'Test Label',
+                controller: controller,
+              ),
+            ),
+          ),
+        );
+
+        // Initially no clear button (text is empty)
+        expect(find.byIcon(Icons.close), findsNothing);
+
+        // Enter text
+        await tester.enterText(find.byType(TextField), 'Hello');
+        await tester.pump();
+
+        // Clear button should appear
+        final clearButtonFinder = find.byIcon(Icons.close);
+        expect(clearButtonFinder, findsOneWidget);
+
+        // Tap clear button
+        await tester.tap(clearButtonFinder);
+        await tester.pump();
+
+        // Text should be cleared
+        expect(controller.text, isEmpty);
+        // Clear button should disappear
+        expect(find.byIcon(Icons.close), findsNothing);
+      },
+    );
+
+    testWidgets('Clear button requests focus', (WidgetTester tester) async {
       final controller = TextEditingController();
+      final focusNode = FocusNode();
 
       await tester.pumpWidget(
         MaterialApp(
@@ -74,40 +114,38 @@ void main() {
             body: LuxuryTextField(
               label: 'Test Label',
               controller: controller,
+              focusNode: focusNode,
             ),
           ),
         ),
       );
 
-      // Initially no clear button (text is empty)
-      expect(find.byIcon(Icons.close), findsNothing);
-
       // Enter text
       await tester.enterText(find.byType(TextField), 'Hello');
       await tester.pump();
 
-      // Clear button should appear
-      final clearButtonFinder = find.byIcon(Icons.close);
-      expect(clearButtonFinder, findsOneWidget);
+      // Ensure it is focused (enterText focuses it)
+      expect(focusNode.hasFocus, isTrue);
+
+      // Unfocus
+      focusNode.unfocus();
+      await tester.pump();
+      expect(focusNode.hasFocus, isFalse);
 
       // Tap clear button
+      final clearButtonFinder = find.byIcon(Icons.close);
       await tester.tap(clearButtonFinder);
       await tester.pump();
 
-      // Text should be cleared
-      expect(controller.text, isEmpty);
-      // Clear button should disappear
-      expect(find.byIcon(Icons.close), findsNothing);
+      // Should be focused again
+      expect(focusNode.hasFocus, isTrue);
     });
 
     testWidgets('Password toggle works correctly', (WidgetTester tester) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
-            body: LuxuryTextField(
-              label: 'Password',
-              obscureText: true,
-            ),
+            body: LuxuryTextField(label: 'Password', obscureText: true),
           ),
         ),
       );

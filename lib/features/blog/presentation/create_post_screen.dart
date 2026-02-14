@@ -32,8 +32,10 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
       // Optimization: Compress image to avoid uploading large files
       // This reduces bandwidth usage and upload time significantly.
       final tempDir = await getTemporaryDirectory();
-      final targetPath =
-          p.join(tempDir.path, '${DateTime.now().millisecondsSinceEpoch}.jpg');
+      final targetPath = p.join(
+        tempDir.path,
+        '${DateTime.now().millisecondsSinceEpoch}.jpg',
+      );
 
       final compressedFile = await FlutterImageCompress.compressAndGetFile(
         pickedFile.path,
@@ -56,7 +58,9 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
 
   Future<void> _submitPost() async {
     if (_titleController.text.isEmpty || _contentController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Veuillez remplir tous les champs')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Veuillez remplir tous les champs')),
+      );
       return;
     }
 
@@ -64,20 +68,26 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
 
     try {
       final userRole = ref.read(userRoleProvider); // Get current role
-      await ref.read(blogRepositoryProvider).createPost(
-        title: _titleController.text,
-        content: _contentController.text,
-        userRole: userRole,
-        imageFile: _imageFile,
-      );
+      await ref
+          .read(blogRepositoryProvider)
+          .createPost(
+            title: _titleController.text,
+            content: _contentController.text,
+            userRole: userRole,
+            imageFile: _imageFile,
+          );
 
       if (mounted) {
         Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Post publié avec succès')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Post publié avec succès')),
+        );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Erreur: $e')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Erreur: $e')));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -89,7 +99,10 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
     return Scaffold(
       backgroundColor: AppPalettes.navy,
       appBar: AppBar(
-        title: const Text("NOUVEAU POST", style: TextStyle(color: AppPalettes.gold)),
+        title: const Text(
+          "NOUVEAU POST",
+          style: TextStyle(color: AppPalettes.gold),
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
@@ -110,16 +123,26 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(color: AppPalettes.gold.withOpacity(0.3)),
                   image: _imageFile != null
-                      ? DecorationImage(image: FileImage(_imageFile!), fit: BoxFit.cover)
+                      ? DecorationImage(
+                          image: FileImage(_imageFile!),
+                          fit: BoxFit.cover,
+                        )
                       : null,
                 ),
                 child: _imageFile == null
                     ? const Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.add_a_photo, color: AppPalettes.gold, size: 40),
+                          Icon(
+                            Icons.add_a_photo,
+                            color: AppPalettes.gold,
+                            size: 40,
+                          ),
                           SizedBox(height: 8),
-                          Text("AJOUTER UNE PHOTO", style: TextStyle(color: AppPalettes.offWhite)),
+                          Text(
+                            "AJOUTER UNE PHOTO",
+                            style: TextStyle(color: AppPalettes.offWhite),
+                          ),
                         ],
                       )
                     : null,
@@ -128,25 +151,25 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
             const SizedBox(height: 24),
 
             // Fields
-            LuxuryTextField(
-              label: "TITRE",
-              controller: _titleController,
-            ),
+            LuxuryTextField(label: "TITRE", controller: _titleController),
             const SizedBox(height: 16),
             LuxuryTextField(
               label: "CONTENU",
               controller: _contentController,
               keyboardType: TextInputType.multiline,
             ),
+
             // Note: Multiline height would be handled by LuxuryTextField internals or by wrapping.
             // For now, assume it expands or use lines logic if exposed.
-
             const SizedBox(height: 8),
             Align(
               alignment: Alignment.centerRight,
               child: Text(
                 "${_contentController.text.length}/10000",
-                style: TextStyle(color: AppPalettes.offWhite.withOpacity(0.5), fontSize: 12),
+                style: TextStyle(
+                  color: AppPalettes.offWhite.withOpacity(0.5),
+                  fontSize: 12,
+                ),
               ),
             ),
 

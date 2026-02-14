@@ -1,13 +1,20 @@
 // lib/core/constants/initial_data.dart
 
 class InitialResidentData {
-  final int id; // ID Appartement correspond souvent à ID table locale simplifiée
+  final int
+  id; // ID Appartement correspond souvent à ID table locale simplifiée
   final String name;
   final int floor;
   final int aptNumber;
   final String role;
 
-  const InitialResidentData(this.id, this.name, this.floor, this.aptNumber, this.role);
+  const InitialResidentData(
+    this.id,
+    this.name,
+    this.floor,
+    this.aptNumber,
+    this.role,
+  );
 }
 
 const List<InitialResidentData> kInitialResidents = [

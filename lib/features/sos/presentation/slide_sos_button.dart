@@ -41,20 +41,21 @@ class _SecureSosButtonState extends State<SecureSosButton> {
           desiredAccuracy: LocationAccuracy.high,
           timeLimit: const Duration(seconds: 5),
         );
-        locationString = "https://www.google.com/maps/search/?api=1&query=${position.latitude},${position.longitude}";
+        locationString =
+            "https://www.google.com/maps/search/?api=1&query=${position.latitude},${position.longitude}";
       } catch (e) {
         // Fallback or error handling
         locationString = "Erreur GPS: ${e.toString()}";
       }
     } else {
-       locationString = "Permission GPS refusée";
+      locationString = "Permission GPS refusée";
     }
 
     // 3. WHATSAPP
     final message = Uri.encodeComponent(
       "SOS - URGENCE - ${widget.residentName}\n\n"
       "J'ai besoin d'aide immédiate !\n"
-      "Localisation: $locationString"
+      "Localisation: $locationString",
     );
 
     // Replace with actual Syndic/Emergency number
@@ -99,7 +100,11 @@ class _SecureSosButtonState extends State<SecureSosButton> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.warning_amber_rounded, color: Colors.white, size: 40),
+              const Icon(
+                Icons.warning_amber_rounded,
+                color: Colors.white,
+                size: 40,
+              ),
               const SizedBox(height: 8),
               Text(
                 "APPUYER POUR ALERTE",
@@ -144,7 +149,8 @@ class _SecureSosButtonState extends State<SecureSosButton> {
                 setState(() {
                   _dragValue += details.delta.dx;
                   if (_dragValue < 0) _dragValue = 0;
-                  if (_dragValue > _width - _height) _dragValue = _width - _height;
+                  if (_dragValue > _width - _height)
+                    _dragValue = _width - _height;
                 });
               },
               onHorizontalDragEnd: (details) {
