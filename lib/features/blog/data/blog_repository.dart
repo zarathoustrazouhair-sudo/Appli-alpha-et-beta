@@ -14,6 +14,10 @@ BlogRepository blogRepository(BlogRepositoryRef ref) {
 class BlogRepository {
   final SupabaseClient _client;
 
+  // SECURITY: Input validation limits
+  static const int maxTitleLength = 100;
+  static const int maxContentLength = 5000;
+
   BlogRepository(this._client);
 
   Future<List<PostEntity>> getPosts({required UserRole userRole}) async {
@@ -53,8 +57,24 @@ class BlogRepository {
     required UserRole userRole,
     File? imageFile,
   }) async {
+    // 1. Role Check
     if (userRole == UserRole.concierge) {
       throw Exception("ACCESS_DENIED: Concierge cannot create posts.");
+    }
+
+    // 2. Input Validation (Security)
+    if (title.trim().isEmpty) {
+      throw Exception("Le titre ne peut pas être vide.");
+    }
+    if (title.length > maxTitleLength) {
+      throw Exception("Le titre est trop long (max $maxTitleLength caractères).");
+    }
+
+    if (content.trim().isEmpty) {
+      throw Exception("Le contenu ne peut pas être vide.");
+    }
+    if (content.length > maxContentLength) {
+      throw Exception("Le contenu est trop long (max $maxContentLength caractères).");
     }
 
     String? imageUrl;
@@ -70,8 +90,8 @@ class BlogRepository {
     }
 
     await _client.from('blog_posts').insert({
-      'title': title,
-      'content': content,
+      'title': title.trim(), // Sanitize: Trim
+      'content': content.trim(), // Sanitize: Trim
       'image_url': imageUrl,
       'author_id': _client.auth.currentUser!.id,
     });
