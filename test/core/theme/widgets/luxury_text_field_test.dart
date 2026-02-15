@@ -130,5 +130,69 @@ void main() {
       expect(textFieldRevealed.obscureText, isFalse);
       expect(find.byIcon(Icons.visibility_off), findsOneWidget);
     });
+
+    testWidgets('FocusNode parameter is respected', (WidgetTester tester) async {
+      final focusNode = FocusNode();
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: LuxuryTextField(
+              label: 'Test Label',
+              focusNode: focusNode,
+            ),
+          ),
+        ),
+      );
+
+      final textField = tester.widget<TextField>(find.byType(TextField));
+      expect(textField.focusNode, equals(focusNode));
+
+      // Request focus via external node
+      focusNode.requestFocus();
+      await tester.pump();
+
+      expect(focusNode.hasFocus, isTrue);
+    });
+
+    testWidgets('Clear button keeps focus on text field', (WidgetTester tester) async {
+      // Use external focus node to verify easier, but internal should work too.
+      // Let's test default behavior (internal node).
+
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: LuxuryTextField(
+              label: 'Test Label',
+            ),
+          ),
+        ),
+      );
+
+      // Enter text to show clear button
+      await tester.enterText(find.byType(TextField), 'Hello');
+      await tester.pump();
+
+      // Ensure it has focus (enterText usually focuses, but let's be sure)
+      await tester.tap(find.byType(TextField));
+      await tester.pump();
+
+      // Verify initial focus
+      final textFieldFinder = find.byType(TextField);
+      var textField = tester.widget<TextField>(textFieldFinder);
+      expect(textField.focusNode!.hasFocus, isTrue);
+
+      // Tap clear button
+      final clearButtonFinder = find.byIcon(Icons.close);
+      await tester.tap(clearButtonFinder);
+      await tester.pump();
+
+      // Verify text is cleared
+      textField = tester.widget<TextField>(textFieldFinder);
+      expect(textField.controller!.text, isEmpty);
+
+      // Verify focus is RETAINED
+      expect(textField.focusNode!.hasFocus, isTrue);
+    });
   });
 }
