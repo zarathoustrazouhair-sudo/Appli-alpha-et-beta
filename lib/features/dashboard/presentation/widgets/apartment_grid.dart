@@ -4,6 +4,39 @@ import 'package:residence_lamandier_b/core/theme/luxury_theme.dart';
 class ApartmentGrid extends StatelessWidget {
   const ApartmentGrid({super.key});
 
+  // Optimized Decorations: Pre-calculated to avoid object allocation during build.
+  // Paid (Cyan: 0xFF00E5FF)
+  static const _paidDecoration = BoxDecoration(
+    color: AppTheme.darkNavy,
+    borderRadius: BorderRadius.all(Radius.circular(8)),
+    border: Border.fromBorderSide(
+      BorderSide(color: Color(0xCC00E5FF), width: 1.5), // 0.8 opacity
+    ),
+    boxShadow: [
+      BoxShadow(
+        color: Color(0x3300E5FF), // 0.2 opacity
+        blurRadius: 4,
+        offset: Offset(0, 2),
+      ),
+    ],
+  );
+
+  // Debt (Red: 0xFFFF0040)
+  static const _debtDecoration = BoxDecoration(
+    color: AppTheme.darkNavy,
+    borderRadius: BorderRadius.all(Radius.circular(8)),
+    border: Border.fromBorderSide(
+      BorderSide(color: Color(0xCCFF0040), width: 1.5), // 0.8 opacity
+    ),
+    boxShadow: [
+      BoxShadow(
+        color: Color(0x33FF0040), // 0.2 opacity
+        blurRadius: 4,
+        offset: Offset(0, 2),
+      ),
+    ],
+  );
+
   @override
   Widget build(BuildContext context) {
     return SliverGrid(
@@ -18,7 +51,6 @@ class ApartmentGrid extends StatelessWidget {
           final apartmentNumber = index + 1;
           // Mock Status: Even numbers are debt (Red), Odd are paid (Cyan)
           final bool isDebt = apartmentNumber % 2 == 0;
-          final Color borderColor = isDebt ? const Color(0xFFFF0040) : const Color(0xFF00E5FF);
           final String statusText = isDebt ? "Payment Overdue" : "Up to date";
           final String semanticLabel = "Apartment $apartmentNumber, $statusText";
 
@@ -37,21 +69,7 @@ class ApartmentGrid extends StatelessWidget {
               child: Tooltip(
                 message: semanticLabel,
                 child: Container(
-                  decoration: BoxDecoration(
-                    color: AppTheme.darkNavy,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                      color: borderColor.withOpacity(0.8),
-                      width: 1.5,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: borderColor.withOpacity(0.2),
-                        blurRadius: 4,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
+                  decoration: isDebt ? _debtDecoration : _paidDecoration,
                   child: Center(
                     child: Text(
                       'AP$apartmentNumber',
