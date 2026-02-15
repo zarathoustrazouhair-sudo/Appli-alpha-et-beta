@@ -9,3 +9,7 @@
 ## 2024-05-25 - Loading State Semantics
 **Learning:** Visual-only indicators like spinners (e.g., in buttons) are invisible to screen readers, leaving users with a disabled button and no context.
 **Action:** Always wrap loading indicators in `Semantics(label: 'Loading...', child: ...)` to ensure the state change is announced, even if the parent button is disabled.
+
+## 2024-05-26 - Clear Button Focus Retention
+**Learning:** Clearing text in input fields without retaining focus forces users to re-tap the field to type again, breaking the flow especially on mobile keyboards.
+**Action:** Always call `focusNode.requestFocus()` after programmatic clearing of text fields to keep the keyboard open and flow uninterrupted.
