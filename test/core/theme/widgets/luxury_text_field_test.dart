@@ -130,5 +130,57 @@ void main() {
       expect(textFieldRevealed.obscureText, isFalse);
       expect(find.byIcon(Icons.visibility_off), findsOneWidget);
     });
+
+    testWidgets('FocusNode is respected and used', (WidgetTester tester) async {
+      final focusNode = FocusNode();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: LuxuryTextField(
+              label: 'Test Label',
+              focusNode: focusNode,
+            ),
+          ),
+        ),
+      );
+
+      final textField = tester.widget<TextField>(find.byType(TextField));
+      expect(textField.focusNode, focusNode);
+    });
+
+    testWidgets('Clear button keeps focus on field', (WidgetTester tester) async {
+      final controller = TextEditingController(text: 'Initial');
+      final focusNode = FocusNode();
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: LuxuryTextField(
+              label: 'Test Label',
+              controller: controller,
+              focusNode: focusNode,
+              autofocus: true,
+            ),
+          ),
+        ),
+      );
+
+      // Verify initial focus
+      expect(focusNode.hasFocus, isTrue);
+
+      // Find clear button
+      final clearButtonFinder = find.byIcon(Icons.close);
+      expect(clearButtonFinder, findsOneWidget);
+
+      // Tap clear button
+      await tester.tap(clearButtonFinder);
+      await tester.pump();
+
+      // Verify text is cleared
+      expect(controller.text, isEmpty);
+
+      // Verify focus is still maintained/requested
+      expect(focusNode.hasFocus, isTrue);
+    });
   });
 }
