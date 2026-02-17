@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:residence_lamandier_b/core/theme/luxury_theme.dart';
 
 class LuxuryTextField extends StatefulWidget {
@@ -6,6 +7,7 @@ class LuxuryTextField extends StatefulWidget {
   final String? hint;
   final String? initialValue;
   final TextEditingController? controller;
+  final FocusNode? focusNode;
   final bool obscureText;
   final TextInputType? keyboardType;
   final ValueChanged<String>? onChanged;
@@ -20,6 +22,7 @@ class LuxuryTextField extends StatefulWidget {
     this.hint,
     this.initialValue,
     this.controller,
+    this.focusNode,
     this.obscureText = false,
     this.keyboardType,
     this.onChanged,
@@ -35,10 +38,13 @@ class LuxuryTextField extends StatefulWidget {
 
 class _LuxuryTextFieldState extends State<LuxuryTextField> {
   late TextEditingController _internalController;
+  late FocusNode _internalFocusNode;
   late bool _isObscured;
 
   TextEditingController get _effectiveController =>
       widget.controller ?? _internalController;
+
+  FocusNode get _effectiveFocusNode => widget.focusNode ?? _internalFocusNode;
 
   @override
   void initState() {
@@ -49,11 +55,13 @@ class _LuxuryTextFieldState extends State<LuxuryTextField> {
     } else {
       _internalController = TextEditingController();
     }
+    _internalFocusNode = FocusNode();
   }
 
   @override
   void dispose() {
     _internalController.dispose();
+    _internalFocusNode.dispose();
     super.dispose();
   }
 
@@ -62,13 +70,18 @@ class _LuxuryTextFieldState extends State<LuxuryTextField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          widget.label.toUpperCase(),
-          style: TextStyle(
-            color: AppTheme.gold.withOpacity(0.9),
-            fontWeight: FontWeight.bold,
-            fontSize: 12,
-            letterSpacing: 1.0,
+        GestureDetector(
+          onTap: () {
+            _effectiveFocusNode.requestFocus();
+          },
+          child: Text(
+            widget.label.toUpperCase(),
+            style: TextStyle(
+              color: AppTheme.gold.withOpacity(0.9),
+              fontWeight: FontWeight.bold,
+              fontSize: 12,
+              letterSpacing: 1.0,
+            ),
           ),
         ),
         const SizedBox(height: 8),
@@ -76,6 +89,7 @@ class _LuxuryTextFieldState extends State<LuxuryTextField> {
           valueListenable: _effectiveController,
           builder: (context, value, child) {
             return TextFormField(
+              focusNode: _effectiveFocusNode,
               autofocus: widget.autofocus,
               textInputAction: widget.textInputAction,
               onFieldSubmitted: widget.onFieldSubmitted,
@@ -124,6 +138,7 @@ class _LuxuryTextFieldState extends State<LuxuryTextField> {
         ),
         tooltip: _isObscured ? 'Afficher le mot de passe' : 'Masquer le mot de passe',
         onPressed: () {
+          HapticFeedback.selectionClick();
           setState(() {
             _isObscured = !_isObscured;
           });
@@ -138,8 +153,10 @@ class _LuxuryTextFieldState extends State<LuxuryTextField> {
         ),
         tooltip: 'Effacer le texte',
         onPressed: () {
+          HapticFeedback.mediumImpact();
           _effectiveController.clear();
           widget.onChanged?.call('');
+          _effectiveFocusNode.requestFocus();
         },
       );
     }
