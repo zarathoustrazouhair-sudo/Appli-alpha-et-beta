@@ -130,5 +130,60 @@ void main() {
       expect(textFieldRevealed.obscureText, isFalse);
       expect(find.byIcon(Icons.visibility_off), findsOneWidget);
     });
+
+    testWidgets('Tapping label focuses the text field', (WidgetTester tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: LuxuryTextField(
+              label: 'Test Label',
+            ),
+          ),
+        ),
+      );
+
+      // Verify initial state: not focused
+      expect(tester.testTextInput.hasAnyClients, isFalse);
+
+      // Tap the label
+      await tester.tap(find.text('TEST LABEL'));
+      await tester.pump();
+
+      // Verify focus: should have clients now
+      expect(tester.testTextInput.hasAnyClients, isTrue);
+    });
+
+    testWidgets('Clearing text retains focus', (WidgetTester tester) async {
+      final controller = TextEditingController(text: 'Initial Text');
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: LuxuryTextField(
+              label: 'Test Label',
+              controller: controller,
+              autofocus: true,
+            ),
+          ),
+        ),
+      );
+
+      // Verify it's focused initially
+      await tester.pump();
+      expect(tester.testTextInput.hasAnyClients, isTrue);
+
+      // Tap the clear button
+      final clearButton = find.byIcon(Icons.close);
+      expect(clearButton, findsOneWidget);
+
+      await tester.tap(clearButton);
+      await tester.pump();
+
+      // Verify text is cleared
+      expect(controller.text, isEmpty);
+
+      // Verify focus is still on the field
+      expect(tester.testTextInput.hasAnyClients, isTrue);
+    });
   });
 }
